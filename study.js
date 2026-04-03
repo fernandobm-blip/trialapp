@@ -1,4 +1,3 @@
-// -------- STATE --------
 const screens = {
   splash: document.getElementById('screen-splash'),
   entry: document.getElementById('screen-entry'),
@@ -18,13 +17,12 @@ const state = {
   study: null
 };
 
-// -------- NAV --------
 function showScreen(name) {
   Object.values(screens).forEach(s => s.classList.remove('active'));
   if (screens[name]) screens[name].classList.add('active');
 
-  const showNav = ['home','journey','more'].includes(name);
-  bottomNav.classList.toggle('visible', showNav);
+  const showNav = ['home', 'journey', 'more'].includes(name);
+  if (bottomNav) bottomNav.classList.toggle('visible', showNav);
 
   updateNav(name);
 }
@@ -39,10 +37,8 @@ function showMainScreen(name) {
   showScreen(name);
 }
 
-// -------- INIT --------
 setTimeout(() => showScreen('entry'), 1000);
 
-// nav buttons
 document.querySelectorAll('.nav-btn').forEach(btn => {
   btn.addEventListener('click', () => showMainScreen(btn.dataset.screen));
 });
@@ -51,16 +47,17 @@ document.querySelectorAll('.nav-shortcut').forEach(btn => {
   btn.addEventListener('click', () => showMainScreen(btn.dataset.target));
 });
 
-// -------- MAIN FLOW --------
-document.getElementById('continueBtn').addEventListener('click', loadStudy);
+const continueBtn = document.getElementById('continueBtn');
+if (continueBtn) {
+  continueBtn.addEventListener('click', loadStudy);
+}
 
 async function loadStudy() {
-
-  const name = document.getElementById('firstName').value || 'Friend';
-  const nct = document.getElementById('nctNumber').value.trim().toUpperCase();
+  const name = document.getElementById('firstName')?.value?.trim() || 'Friend';
+  const nct = document.getElementById('nctNumber')?.value?.trim().toUpperCase();
 
   if (!/^NCT\d{8}$/.test(nct)) {
-    alert("Invalid NCT (NCT########)");
+    alert("Invalid NCT format. Use NCT########");
     return;
   }
 
@@ -68,36 +65,37 @@ async function loadStudy() {
   state.user.nct = nct;
 
   try {
-    const res = await fetch(`/api/trial?nct=${nct}`);
+    const res = await fetch(`/api/trial?nct=${encodeURIComponent(nct)}`);
     const data = await res.json();
 
-    if (!data.NCTId) throw new Error();
+    if (!res.ok || !data.ok) {
+      console.error("Backend error:", data);
+      alert(`Backend error: ${data.error || "Unknown error"}`);
+      return;
+    }
 
     state.study = data;
-
     renderHome();
     showMainScreen('home');
-
   } catch (e) {
-    alert("Error loading study");
-    console.error(e);
+    console.error("Frontend fetch error:", e);
+    alert(`Frontend error: ${e.message}`);
   }
 }
 
-// -------- RENDER --------
 function renderHome() {
-  document.getElementById('welcomeTitle').textContent =
-    `Hello, ${state.user.firstName}`;
+  const welcomeTitle = document.getElementById('welcomeTitle');
+  const welcomeSubtitle = document.getElementById('welcomeSubtitle');
+  const studyTitleHome = document.getElementById('studyTitleHome');
+  const studyMetaHome = document.getElementById('studyMetaHome');
+  const studyNctChip = document.getElementById('studyNctChip');
 
-  document.getElementById('welcomeSubtitle').textContent =
-    state.user.nct;
-
-  document.getElementById('studyTitleHome').textContent =
-    state.study.title;
-
-  document.getElementById('studyMetaHome').textContent =
-    `${state.study.phase} • ${state.study.condition} • ${state.study.status}`;
-
-  document.getElementById('studyNctChip').textContent =
-    state.study.NCTId;
+  if (welcomeTitle) welcomeTitle.textContent = `Hello, ${state.user.firstName}`;
+  if (welcomeSubtitle) welcomeSubtitle.textContent = state.user.nct;
+  if (studyTitleHome) studyTitleHome.textContent = state.study.title;
+  if (studyMetaHome) {
+    studyMetaHome.textContent =
+      `${state.study.phase} • ${state.study.condition} • ${state.study.status}`;
+  }
+  if (studyNctChip) studyNctChip.textContent = state.study.NCTId;
 }
