@@ -1,41 +1,38 @@
 export default async function handler(req, res) {
-  const { nct } = req.query;
+  const nct = String(req.query.nct || "").trim().toUpperCase();
 
-  if (!nct) {
-    return res.status(400).json({ error: "Missing NCT" });
-  }
-
-  const cleanNct = String(nct).trim().toUpperCase();
-
-  if (!/^NCT\d{8}$/.test(cleanNct)) {
-    return res.status(400).json({ error: "Invalid NCT format" });
+  if (!/^NCT\d{8}$/.test(nct)) {
+    return res.status(400).json({
+      ok: false,
+      error: "Invalid NCT format"
+    });
   }
 
   try {
-    const url = `https://clinicaltrials.gov/api/v2/studies/${cleanNct}`;
+    const url = `https://clinicaltrials.gov/api/v2/studies/${nct}?format=json`;
+
     const response = await fetch(url, {
-      method: "GET",
-      headers: { accept: "application/json" }
+      headers: {
+        accept: "application/json"
+      }
     });
 
-    if (response.status === 404) {
-      return res.status(404).json({ error: "Study not found" });
-    }
-
-    const rawText = await response.text();
+    const text = await response.text();
 
     let data;
     try {
-      data = JSON.parse(rawText);
+      data = JSON.parse(text);
     } catch {
       return res.status(500).json({
-        error: "Invalid JSON returned by ClinicalTrials.gov",
-        raw: rawText.slice(0, 500)
+        ok: false,
+        error: "ClinicalTrials.gov did not return valid JSON",
+        raw: text.slice(0, 300)
       });
     }
 
     if (!response.ok) {
-      return res.status(500).json({
+      return res.status(response.status).json({
+        ok: false,
         error: "ClinicalTrials.gov request failed",
         status: response.status,
         details: data
@@ -50,14 +47,15 @@ export default async function handler(req, res) {
     const sponsor = protocol.sponsorCollaboratorsModule || {};
 
     return res.status(200).json({
-      NCTId: identification.nctId || cleanNct,
+      ok: true,
+      NCTId: identification.nctId || nct,
       title: identification.briefTitle || "Untitled study",
       condition:
-        Array.isArray(conditions.conditions) && conditions.conditions.length > 0
+        Array.isArray(conditions.conditions) && conditions.conditions.length
           ? conditions.conditions[0]
           : "N/A",
       phase:
-        Array.isArray(design.phases) && design.phases.length > 0
+        Array.isArray(design.phases) && design.phases.length
           ? design.phases.join(", ")
           : "N/A",
       status: status.overallStatus || "N/A",
@@ -65,6 +63,7 @@ export default async function handler(req, res) {
     });
   } catch (error) {
     return res.status(500).json({
+      ok: false,
       error: "Server error",
       details: error.message
     });
