@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Trial Journey</title>
+  <style>
+    :root {
+      --bg: #eef4fb;
+      --surface: #ffffff;
+      --surface-2: #f8fbff;
+      --surface-3: #f2f7ff;
+      --text: #132235;
+      --muted: #64758a;
+      --line: #dce6f1;
+      --primary: #163b73;
+      --primary-2: #2a62af;
+      --accent: #6aa7ff;
+      --soft: #edf4ff;
+      --soft-2: #eef6ff;
+      --shadow: 0 12px 30px rgba(17, 36, 74, 0.08);
+      --shadow-lg: 0 24px 60px rgba(15, 35, 63, 0.14);
+      --radius: 22px;
+      --radius-lg: 28px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(106, 167, 255, 0.18), transparent 22%),
+        linear-gradient(180deg, #f6f9fd 0%, #edf3fb 100%);
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .phone {
+      width: 100%;
+      max-width: 430px;
+      min-height: 860px;
+      background: var(--surface);
+      border-radius: 34px;
+      overflow: hidden;
+      border: 1px solid #e0e8f2;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+    }
+
+    .status-bar {
+      padding: 16px 20px 6px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--muted);
+      background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+    }
+
+    .screen {
+      display: none;
+      min-height: calc(860px - 36px);
+      padding: 20px 20px 104px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .screen.active { display: block; }
+
+    .stack { display: grid; gap: 14px; }
+    .stack-lg { display: grid; gap: 18px; }
+    .row { display: flex; gap: 12px; }
+    .row.wrap { flex-wrap: wrap; }
+    .row.center { align-items: center; }
+    .row.between { justify-content: space-between; }
+    .mt-8 { margin-top: 8px; }
+    .mt-12 { margin-top: 12px; }
+    .mt-20 { margin-top: 20px; }
+
+    h1, h2, h3, h4, p { margin: 0; }
+    h1 {
+      font-size: 31px;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+    h2 {
+      font-size: 23px;
+      line-height: 1.12;
+      letter-spacing: -0.025em;
+    }
+    h3 {
+      font-size: 17px;
+      line-height: 1.25;
+    }
+
+    .lead {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.58;
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary-2);
+      margin-bottom: 8px;
+    }
+
+    .brand-wrap {
+      min-height: 660px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      flex-direction: column;
+      gap: 18px;
+      position: relative;
+    }
+
+    .brand-wrap::before,
+    .brand-wrap::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(4px);
+      opacity: 0.9;
+    }
+
+    .brand-wrap::before {
+      width: 150px;
+      height: 150px;
+      background: rgba(106, 167, 255, 0.12);
+      top: 120px;
+      left: 36px;
+    }
+
+    .brand-wrap::after {
+      width: 180px;
+      height: 180px;
+      background: rgba(22, 59, 115, 0.08);
+      right: 24px;
+      bottom: 110px;
+    }
+
+    .logo {
+      width: 96px;
+      height: 96px;
+      border-radius: 28px;
+      background: linear-gradient(135deg, var(--primary) 0%, #2e73cc 100%);
+      color: white;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 30px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      z-index: 1;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .card.soft {
+      background: var(--surface-2);
+      box-shadow: none;
+    }
+
+    .hero-card {
+      background: linear-gradient(145deg, #163b73 0%, #285ca6 58%, #3478d1 100%);
+      color: white;
+      border: none;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      right: -26px;
+      top: -30px;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+    }
+    .hero-card .lead,
+    .hero-card .mini-label,
+    .hero-card .helper { color: rgba(255,255,255,0.88); }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #32465d;
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px 14px;
+      font-size: 15px;
+      color: var(--text);
+      outline: none;
+      background: white;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+    }
+
+    input:focus {
+      border-color: #8db3e7;
+      box-shadow: 0 0 0 4px rgba(92, 137, 214, 0.12);
+      transform: translateY(-1px);
+    }
+
+    .btn {
+      border: none;
+      border-radius: 16px;
+      padding: 14px 16px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+
+    .btn-primary {
+      color: white;
+      background: linear-gradient(135deg, var(--primary) 0%, #295da6 100%);
+      box-shadow: var(--shadow);
+    }
+
+    .btn-secondary {
+      color: var(--primary);
+      background: var(--soft);
+    }
+
+    .btn-text {
+      background: transparent;
+      color: var(--primary);
+      padding: 0;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .helper {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .mini-label {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .mini-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.16);
+      color: white;
+      font-size: 12px;
+      font-weight: 800;
+      border: 1px solid rgba(255,255,255,0.14);
+      backdrop-filter: blur(6px);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+    }
+
+    .badge.basic,
+    .badge.enhanced {
+      background: rgba(255,255,255,0.16);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.14);
+    }
+
+    .meta-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .meta-pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: var(--surface-3);
+      border: 1px solid #dfeaf8;
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .quick-btn {
+      display: grid;
+      gap: 8px;
+      align-content: start;
+      min-height: 110px;
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quick-btn::after {
+      content: "";
+      position: absolute;
+      right: -16px;
+      bottom: -16px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(42, 98, 175, 0.06);
+    }
+
+    .quick-btn span:first-child { font-size: 22px; position: relative; z-index: 1; }
+    .quick-btn strong { font-size: 15px; color: var(--text); position: relative; z-index: 1; }
+    .quick-btn small {
+      font-size: 12px;
+      line-height: 1.45;
+      color: var(--muted);
+      position: relative;
+      z-index: 1;
+    }
+
+    .progress {
+      display: grid;
+      gap: 12px;
+    }
+
+    .progress-item {
+      display: grid;
+      grid-template-columns: 20px 1fr;
+      gap: 12px;
+      align-items: start;
+      position: relative;
+    }
+
+    .progress-item:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      left: 9px;
+      top: 20px;
+      width: 2px;
+      height: calc(100% + 10px);
+      background: #dae6f4;
+    }
+
+    .dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: white;
+      border: 2px solid #96b6e6;
+      margin-top: 2px;
+    }
+
+    .dot.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(42,98,175,0.12);
+    }
+
+    .ribbon-wrap {
+      margin: 0 -20px;
+      padding: 0 20px 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      scroll-behavior: smooth;
+    }
+    .ribbon-wrap::-webkit-scrollbar { display: none; }
+
+    .ribbon {
+      display: inline-flex;
+      gap: 10px;
+      min-width: max-content;
+      padding-bottom: 8px;
+    }
+
+    .visit-pill {
+      border: 1px solid #d8e4f2;
+      background: white;
+      color: #47607c;
+      border-radius: 20px;
+      padding: 12px 14px;
+      min-width: 98px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(20, 44, 80, 0.04);
+      transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .visit-pill:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(20, 44, 80, 0.08);
+    }
+
+    .visit-pill small {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      opacity: 0.72;
+      margin-top: 4px;
+      line-height: 1.25;
+    }
+
+    .visit-pill.active {
+      background: linear-gradient(135deg, var(--primary) 0%, #2a62af 100%);
+      color: white;
+      border-color: transparent;
+      box-shadow: var(--shadow);
+    }
+
+    .visit-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .visit-marker {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--soft) 0%, #deebff 100%);
+      color: var(--primary);
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 14px;
+      flex-shrink: 0;
+      border: 1px solid #d5e4f7;
+    }
+
+    .visit-subtitle {
+      color: var(--primary-2);
+      font-size: 12px;
+      font-weight: 800;
+      margin-top: 4px;
+    }
+
+    .procedure-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .procedure-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-radius: 18px;
+      background: #fbfdff;
+      border: 1px solid #e4ecf6;
+      padding: 14px;
+    }
+
+    .procedure-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 13px;
+      background: linear-gradient(135deg, var(--soft-2) 0%, #e2efff 100%);
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      flex-shrink: 0;
+      border: 1px solid #dce8f9;
+    }
+
+    .procedure-text strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .procedure-text span {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    details {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px 16px;
+      background: white;
+      box-shadow: 0 8px 18px rgba(20, 44, 80, 0.03);
+    }
+
+    details summary {
+      list-style: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 800;
+      color: #24374f;
+    }
+    details summary::-webkit-details-marker { display: none; }
+    details p {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .empty-note {
+      border: 1px dashed #c4d8ee;
+      border-radius: 18px;
+      background: #f8fbff;
+      padding: 14px 16px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .locked-box {
+      border: 1px dashed #c7d9ee;
+      border-radius: 18px;
+      padding: 14px 16px;
+      background: #f8fbff;
+    }
+
+    .nav {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: none;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 10px 10px 18px;
+      border-top: 1px solid var(--line);
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(14px);
+    }
+
+    .nav.visible { display: grid; }
+    .nav button {
+      border: none;
+      background: transparent;
+      border-radius: 14px;
+      padding: 10px 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      display: grid;
+      justify-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .nav button.active {
+      color: var(--primary);
+      background: var(--soft);
+    }
+
+    a.clean-link {
+      color: inherit;
+      text-decoration: none;
+      display: block;
+    }
+
+    @media (max-width: 480px) {
+      .app-shell { padding: 0; }
+      .phone {
+        max-width: none;
+        min-height: 100vh;
+        border-radius: 0;
+        border: none;
+      }
+      .screen { min-height: calc(100vh - 36px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <div class="phone">
+      <div class="status-bar">
+        <span>My Trial Journey</span>
+        <span id="modePill">Prototype</span>
+      </div>
+
+      <section id="screen-splash" class="screen active">
+        <div class="brand-wrap">
+          <div class="logo">MTJ</div>
+          <div class="stack" style="max-width: 300px;">
+            <div class="eyebrow">Patient companion app</div>
+            <h1>My Trial Journey</h1>
+            <p class="lead">A simpler way to understand a clinical trial journey, one visit at a time.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-entry" class="screen">
+        <div class="stack-lg">
+          <div class="row between center">
+            <div>
+              <div class="eyebrow">Get started</div>
+              <h2>Enter your trial information</h2>
+            </div>
+            <div class="row center" style="gap:8px;">
+              <button class="btn btn-secondary lang-btn active" data-lang="en" style="padding:10px 12px; min-width:52px;">EN</button>
+              <button class="btn btn-secondary lang-btn" data-lang="es" style="padding:10px 12px; min-width:52px;">ES</button>
+            </div>
+          </div>
+
+          <p class="lead">Any study can open in the basic experience. If your research team provided a code, you can use it to access additional study information when available.</p>
+
+          <div class="card stack">
+            <div class="field">
+              <label for="firstName">First name</label>
+              <input id="firstName" type="text" placeholder="Fernando" />
+            </div>
+
+            <div class="field">
+              <label for="nctNumber">NCT number</label>
+              <input id="nctNumber" type="text" placeholder="NCT06123456" />
+            </div>
+
+            <button class="btn btn-primary" id="continueBtn">Continue</button>
+            <p class="helper">Educational support only. Always follow instructions from your care team.</p>
+          </div>
+
+          <div class="card soft stack">
+            <div class="mini-label">Demo access</div>
+            <div class="row wrap">
+              <button class="btn btn-secondary demo-basic" data-nct="NCT00000001">Basic demo</button>
+              <button class="btn btn-secondary demo-enhanced" data-nct="NCT99990001">Code-enabled demo</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-code" class="screen">
+        <div class="stack-lg">
+          <div>
+            <div class="eyebrow">Enhanced study</div>
+            <h2>This study includes an enhanced participant experience</h2>
+            <p class="lead">Enter the site access code provided by your research team to continue.</p>
+          </div>
+
+          <div class="card stack">
+            <div class="field">
+              <label for="siteCode">Site access code</label>
+              <input id="siteCode" type="text" placeholder="ASX682-FL-01" />
+            </div>
+
+            <button class="btn btn-primary" id="unlockBtn">Open Enhanced Experience</button>
+            <button class="btn btn-text" id="backToEntryBtn">Back</button>
+            <p class="helper">Only site access codes linked to this activated study will open the enhanced study journey.</p>
+          </div>
+
+          <div class="locked-box stack">
+            <div class="mini-label">What enhanced unlocks</div>
+            <p class="lead">Detailed visit ribbon, visit-by-visit procedures, patient-friendly treatment context, and a more complete study journey.</p>
+          </div>
+
+          <div class="card soft stack">
+            <div class="mini-label">Demo code</div>
+            <div class="row wrap">
+              <button class="btn btn-secondary demo-code" data-code="ASX682-FL-01">ASX682-FL-01</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-home" class="screen">
+        <div class="stack-lg">
+          <div class="card hero-card">
+            <div class="mini-label">Welcome</div>
+            <h2 id="welcomeTitle">Hello</h2>
+            <p class="lead mt-8" id="welcomeSubtitle">Your study at a glance.</p>
+            <div class="row wrap mt-20">
+              <span class="badge basic" id="experienceBadge">Basic</span>
+              <span class="mini-chip" id="studyNctChip">NCT</span>
+            </div>
+          </div>
+
+          <div class="card stack">
+            <div class="mini-label">Study overview</div>
+            <h3 id="studyTitleHome">Loading study...</h3>
+            <p class="lead" id="studyMetaHome">Phase • Condition • Sponsor</p>
+            <div class="meta-line" id="homeMetaLine"></div>
+          </div>
+
+          <div class="grid-2">
+            <button class="btn card quick-btn nav-shortcut" data-target="trial">
+              <span>📘</span>
+              <strong>My Trial</strong>
+              <small>See a simple overview of the study.</small>
+            </button>
+            <button class="btn card quick-btn nav-shortcut" data-target="questions">
+              <span>💬</span>
+              <strong>Common Questions</strong>
+              <small>Read short, patient-friendly answers.</small>
+            </button>
+            <button class="btn card quick-btn nav-shortcut" data-target="calendar">
+              <span>📅</span>
+              <strong>Calendar</strong>
+              <small>View your study calendar and upcoming visits.</small>
+            </button>
+            <button class="btn card quick-btn nav-shortcut" data-target="journey">
+              <span>🧭</span>
+              <strong>Study Journey</strong>
+              <small>Explore visits and what each one may include.</small>
+            </button>
+          </div>
+
+          <div class="card soft stack">
+            <div class="mini-label">Helpful for today</div>
+            <p class="lead" id="todayMessage">Bring your medication list and keep track of any new questions.</p>
+          </div>
+
+          <div class="card stack">
+            <div class="mini-label">Journey snapshot</div>
+            <div class="progress" id="progressSnapshot"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-trial" class="screen">
+        <div class="stack-lg">
+          <div>
+            <div class="eyebrow">My Trial</div>
+            <h2>About your study</h2>
+            <p class="lead">The same structure is used in both versions. Enhanced studies add deeper, patient-friendly detail.</p>
+          </div>
+
+          <div class="card stack">
+            <div class="mini-label">Study summary</div>
+            <h3 id="trialAppTitle">—</h3>
+            <p class="lead" id="trialSummary">—</p>
+          </div>
+
+          <div class="card stack">
+            <div class="mini-label">Why this study matters</div>
+            <p class="lead" id="trialWhyItMatters">—</p>
+          </div>
+
+          <div class="card stack">
+            <div class="mini-label">Treatment</div>
+            <p class="lead" id="trialTreatment">—</p>
+            <p class="helper mt-12"><strong>How it is given:</strong> <span id="trialHowGiven">—</span></p>
+          </div>
+
+          <div class="card soft stack">
+            <div class="mini-label">Important note</div>
+            <p class="lead" id="trialDisclaimer">This app is for educational purposes only and does not replace medical advice. Always follow instructions from your care team.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-journey" class="screen">
+        <div class="stack-lg">
+          <div>
+            <div class="eyebrow">Study Journey</div>
+            <h2>Explore each visit</h2>
+            <p class="lead" id="journeyIntro">Select a visit to see what it may include. Your care team instructions may vary.</p>
+          </div>
+
+          <div class="stack">
+            <div class="mini-label">Visit ribbon</div>
+            <div class="ribbon-wrap">
+              <div class="ribbon" id="visitRibbon"></div>
+            </div>
+          </div>
+
+          <div class="card stack" id="visitDetailsCard">
+            <div class="row between center" style="margin-bottom:-4px;">
+              <div class="mini-label" style="margin-bottom:0;">Interactive visit guide</div>
+              <span class="meta-pill" id="journeyModePill">Enhanced ribbon</span>
+            </div>
+            <div class="visit-card-header">
+              <div class="row center">
+                <div class="visit-marker" id="visitMarker">V</div>
+                <div>
+                  <h3 id="selectedVisitTitle">Visit</h3>
+                  <div class="visit-subtitle" id="selectedVisitSubtitle">Viewing visit details</div>
+                </div>
+              </div>
+              <span class="mini-chip" id="selectedVisitTime">Time varies</span>
+            </div>
+
+            <div class="card soft stack" style="padding:14px 16px; border-radius:18px;">
+              <div class="mini-label">What this visit may include</div>
+              <div class="procedure-list" id="procedureList"></div>
+            </div>
+
+            <div class="grid-2">
+              <div class="card soft stack" style="padding:14px 16px; border-radius:18px;">
+                <div class="mini-label">What to expect</div>
+                <p class="lead" id="visitExpect">—</p>
+              </div>
+              <div class="card soft stack" style="padding:14px 16px; border-radius:18px;">
+                <div class="mini-label">Helpful tip</div>
+                <p class="lead" id="visitTip">—</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="empty-note" id="basicJourneyNote" style="display:none;">This study is using the basic experience. The enhanced version can show a full protocol-based visit ribbon and visit-by-visit guidance.</div>
+        </div>
+      </section>
+
+      <section id="screen-questions" class="screen">
+        <div class="stack-lg">
+          <div>
+            <div class="eyebrow">Common Questions</div>
+            <h2>Clear answers in simple language</h2>
+            <p class="lead">General answers are available for every study. Enhanced studies can include study-specific answers too.</p>
+          </div>
+
+          <div class="stack" id="questionsList"></div>
+        </div>
+      </section>
+
+      <section id="screen-calendar" class="screen">
+        <div class="stack-lg">
+          <div>
+            <div class="eyebrow">Calendar</div>
+            <h2>Study calendar</h2>
+            <p class="lead">This area can become the detailed visit calendar designed by Catalina.</p>
+          </div>
+
+          <div class="card soft stack" style="min-height:260px; align-items:center; justify-content:center; text-align:center;">
+            <p class="lead">📅 Calendar module placeholder</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-more" class="screen">
+        <div class="stack-lg">
+          <div>
+            <div class="eyebrow">More</div>
+            <h2>Website, app info, and support</h2>
+            <p class="lead">This section can be tuned later with a warmer founder note, a welcome message, or additional educational content.</p>
+          </div>
+
+          <div class="card stack">
+            <div class="mini-label">Website</div>
+            <a class="clean-link" href="#" id="websiteLink">
+              <h3>Go to website</h3>
+              <p class="lead mt-8">Learn about clinical trials, educational resources, and future study support tools.</p>
+            </a>
+          </div>
+
+          <div class="card soft stack">
+            <div class="mini-label">About this app</div>
+            <p class="lead">My Trial Journey is designed to make a clinical trial easier to understand by turning complex study information into a simpler patient-facing experience.</p>
+          </div>
+
+          <div class="card soft stack">
+            <div class="mini-label">Experience</div>
+            <p class="lead" id="moreExperienceText">Basic studies open with a general experience. Activated studies can unlock a richer journey with a site access code.</p>
+          </div>
+
+          <div class="card soft stack">
+            <div class="mini-label">Disclaimer</div>
+            <p class="lead" id="moreDisclaimer">This app is for educational purposes only and does not replace medical advice. Always follow instructions from your care team.</p>
+          </div>
+        </div>
+      </section>
+
+      <nav class="nav" id="bottomNav">
+        <button class="nav-btn active" data-screen="home"><span>🏠</span><span>Home</span></button>
+        <button class="nav-btn" data-screen="journey"><span>🧭</span><span>Journey</span></button>
+        <button class="nav-btn" data-screen="more"><span>⚙️</span><span>More</span></button>
+      </nav>
+    </div>
+  </div>
+
+  <script src="study.js"></script>
+</body>
+</html>
