@@ -328,6 +328,11 @@
       gap: 12px;
     }
 
+    .grid-1 {
+      display: grid;
+      gap: 12px;
+    }
+
     .quick-btn {
       display: grid;
       gap: 8px;
@@ -596,6 +601,38 @@
       display: block;
     }
 
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .journey-subnav {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .journey-link {
+      border: 1px solid #dfeaf8;
+      background: var(--surface-3);
+      border-radius: 16px;
+      padding: 12px 14px;
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 800;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .legacy-screen-note {
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      padding-top: 60px;
+    }
+
     @media (max-width: 480px) {
       .app-shell { padding: 0; }
       .phone {
@@ -669,11 +706,15 @@
 
       <section id="screen-code" class="screen">
         <div class="stack-lg">
-          <div>
-            <div class="eyebrow">Enhanced study</div>
-            <h2>This study includes an enhanced participant experience</h2>
-            <p class="lead">Enter the site access code provided by your research team to continue.</p>
+          <div class="section-header">
+            <div>
+              <div class="eyebrow">Enhanced study</div>
+              <h2>This study includes an enhanced participant experience</h2>
+            </div>
+            <button class="btn btn-text nav-shortcut" data-target="entry">← Back</button>
           </div>
+
+          <p class="lead">Enter the site access code provided by your research team to continue.</p>
 
           <div class="card stack">
             <div class="field">
@@ -720,25 +761,22 @@
           </div>
 
           <div class="grid-2">
-            <button class="btn card quick-btn nav-shortcut" data-target="trial">
-              <span>📘</span>
-              <strong>My Trial</strong>
-              <small>See a simple overview of the study.</small>
+            <button class="btn card quick-btn nav-shortcut" data-target="journey">
+              <span>🧭</span>
+              <strong>My Journey</strong>
+              <small>Your study overview, visits and what to expect.</small>
             </button>
+
             <button class="btn card quick-btn nav-shortcut" data-target="questions">
               <span>💬</span>
               <strong>Common Questions</strong>
               <small>Read short, patient-friendly answers.</small>
             </button>
-            <button class="btn card quick-btn nav-shortcut" data-target="calendar">
+
+            <button class="btn card quick-btn nav-shortcut" data-target="calendar" style="grid-column: 1 / -1;">
               <span>📅</span>
               <strong>Calendar</strong>
               <small>View your study calendar and upcoming visits.</small>
-            </button>
-            <button class="btn card quick-btn nav-shortcut" data-target="journey">
-              <span>🧭</span>
-              <strong>Study Journey</strong>
-              <small>Explore visits and what each one may include.</small>
             </button>
           </div>
 
@@ -755,43 +793,52 @@
       </section>
 
       <section id="screen-trial" class="screen">
-        <div class="stack-lg">
-          <div>
-            <div class="eyebrow">My Trial</div>
-            <h2>About your study</h2>
-            <p class="lead">The same structure is used in both versions. Enhanced studies add deeper, patient-friendly detail.</p>
-          </div>
-
-          <div class="card stack">
-            <div class="mini-label">Study summary</div>
-            <h3 id="trialAppTitle">—</h3>
-            <p class="lead" id="trialSummary">—</p>
-          </div>
-
-          <div class="card stack">
-            <div class="mini-label">Why this study matters</div>
-            <p class="lead" id="trialWhyItMatters">—</p>
-          </div>
-
-          <div class="card stack">
-            <div class="mini-label">Treatment</div>
-            <p class="lead" id="trialTreatment">—</p>
-            <p class="helper mt-12"><strong>How it is given:</strong> <span id="trialHowGiven">—</span></p>
-          </div>
-
-          <div class="card soft stack">
-            <div class="mini-label">Important note</div>
-            <p class="lead" id="trialDisclaimer">This app is for educational purposes only and does not replace medical advice. Always follow instructions from your care team.</p>
-          </div>
+        <div class="legacy-screen-note">
+          This screen is kept only for compatibility while My Trial is being merged into My Journey.
         </div>
       </section>
 
       <section id="screen-journey" class="screen">
         <div class="stack-lg">
-          <div>
-            <div class="eyebrow">Study Journey</div>
-            <h2>Explore each visit</h2>
-            <p class="lead" id="journeyIntro">Select a visit to see what it may include. Your care team instructions may vary.</p>
+          <div class="section-header">
+            <div>
+              <div class="eyebrow">My Journey</div>
+              <h2>Your study, in one place</h2>
+            </div>
+            <button class="btn btn-text nav-shortcut" data-target="home">← Back</button>
+          </div>
+
+          <div class="journey-subnav">
+            <button class="journey-link nav-shortcut" data-target="questions">Open Common Questions</button>
+            <button class="journey-link nav-shortcut" data-target="calendar">Open Calendar</button>
+          </div>
+
+          <div class="card stack">
+            <div class="mini-label">Study overview</div>
+            <h3 id="trialAppTitle">—</h3>
+            <p class="lead" id="trialSummary">—</p>
+
+            <div class="meta-line">
+              <span class="meta-pill" id="journeyOverviewPill">Study overview</span>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="card soft stack" style="padding:14px 16px; border-radius:18px;">
+              <div class="mini-label">Why this study matters</div>
+              <p class="lead" id="trialWhyItMatters">—</p>
+            </div>
+
+            <div class="card soft stack" style="padding:14px 16px; border-radius:18px;">
+              <div class="mini-label">Treatment</div>
+              <p class="lead" id="trialTreatment">—</p>
+              <p class="helper"><strong>How it is given:</strong> <span id="trialHowGiven">—</span></p>
+            </div>
+          </div>
+
+          <div class="card soft stack">
+            <div class="mini-label">Important note</div>
+            <p class="lead" id="trialDisclaimer">This app is for educational purposes only and does not replace medical advice. Always follow instructions from your care team.</p>
           </div>
 
           <div class="stack">
@@ -806,6 +853,7 @@
               <div class="mini-label" style="margin-bottom:0;">Interactive visit guide</div>
               <span class="meta-pill" id="journeyModePill">Enhanced ribbon</span>
             </div>
+
             <div class="visit-card-header">
               <div class="row center">
                 <div class="visit-marker" id="visitMarker">V</div>
@@ -834,17 +882,23 @@
             </div>
           </div>
 
-          <div class="empty-note" id="basicJourneyNote" style="display:none;">This study is using the basic experience. The enhanced version can show a full protocol-based visit ribbon and visit-by-visit guidance.</div>
+          <div class="empty-note" id="basicJourneyNote" style="display:none;">
+            This study is using the basic experience. The enhanced version can show a full protocol-based visit ribbon and visit-by-visit guidance.
+          </div>
         </div>
       </section>
 
       <section id="screen-questions" class="screen">
         <div class="stack-lg">
-          <div>
-            <div class="eyebrow">Common Questions</div>
-            <h2>Clear answers in simple language</h2>
-            <p class="lead">General answers are available for every study. Enhanced studies can include study-specific answers too.</p>
+          <div class="section-header">
+            <div>
+              <div class="eyebrow">Common Questions</div>
+              <h2>Clear answers in simple language</h2>
+            </div>
+            <button class="btn btn-text nav-shortcut" data-target="journey">← Back</button>
           </div>
+
+          <p class="lead">General answers are available for every study. Enhanced studies can include study-specific answers too.</p>
 
           <div class="stack" id="questionsList"></div>
         </div>
@@ -852,11 +906,15 @@
 
       <section id="screen-calendar" class="screen">
         <div class="stack-lg">
-          <div>
-            <div class="eyebrow">Calendar</div>
-            <h2>Study calendar</h2>
-            <p class="lead">This area can become the detailed visit calendar designed by Catalina.</p>
+          <div class="section-header">
+            <div>
+              <div class="eyebrow">Calendar</div>
+              <h2>Study calendar</h2>
+            </div>
+            <button class="btn btn-text nav-shortcut" data-target="journey">← Back</button>
           </div>
+
+          <p class="lead">This area can become the detailed visit calendar designed by Catalina.</p>
 
           <div class="card soft stack" style="min-height:260px; align-items:center; justify-content:center; text-align:center;">
             <p class="lead">📅 Calendar module placeholder</p>
@@ -866,11 +924,15 @@
 
       <section id="screen-more" class="screen">
         <div class="stack-lg">
-          <div>
-            <div class="eyebrow">More</div>
-            <h2>Website, app info, and support</h2>
-            <p class="lead">This section can be tuned later with a warmer founder note, a welcome message, or additional educational content.</p>
+          <div class="section-header">
+            <div>
+              <div class="eyebrow">More</div>
+              <h2>Website, app info, and support</h2>
+            </div>
+            <button class="btn btn-text nav-shortcut" data-target="home">← Back</button>
           </div>
+
+          <p class="lead">This section can be tuned later with a warmer founder note, a welcome message, or additional educational content.</p>
 
           <div class="card stack">
             <div class="mini-label">Website</div>
