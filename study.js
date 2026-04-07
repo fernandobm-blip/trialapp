@@ -13,157 +13,180 @@ const screens = {
 const bottomNav = document.getElementById('bottomNav');
 const modePill = document.getElementById('modePill');
 
-const DEMO_NCT = "NCTDEMO0001";
-const DEMO_CODE = "DEMO001";
+const DEMO_NCT = 'NCTDEMO0001';
+const DEMO_CODE = 'DEMO001';
+
+const patientQuestions = [
+  { q: 'What is a clinical trial?', a: 'A clinical trial is a research study that tests new treatments or new ways of using existing treatments.' },
+  { q: 'Why am I being offered this study?', a: 'Your doctor believes this study may be an option for your condition based on your medical history.' },
+  { q: 'Is this treatment approved?', a: 'Not always. Many clinical trials study investigational treatments that are not yet approved.' },
+  { q: 'What is the goal of this study?', a: 'The goal is usually to understand safety, effectiveness, or both.' },
+  { q: 'Will I definitely receive treatment?', a: 'It depends. Some studies include different groups or treatment arms.' },
+  { q: 'How often will I need to come to the clinic?', a: 'Visit frequency varies by study. Your team will provide your exact schedule.' },
+  { q: 'How long does each visit take?', a: 'Some visits are short, while others may take several hours depending on procedures.' },
+  { q: 'Will I need blood tests?', a: 'Most studies include blood tests to monitor your health and the effects of treatment.' },
+  { q: 'Will I need scans or imaging?', a: 'Some studies require scans to monitor disease response.' },
+  { q: 'Will I need biopsies?', a: 'Some studies include biopsies, but not all. Ask your team whether they are required in your case.' },
+  { q: 'What side effects should I expect?', a: 'Side effects vary depending on the treatment. Your team will explain what to watch for.' },
+  { q: 'What side effects are urgent?', a: 'Your care team will tell you which symptoms should be reported immediately.' },
+  { q: 'Who do I call if I feel unwell?', a: 'You should contact your study team or treating physician.' },
+  { q: 'Can I continue my current medications?', a: 'Some medications may need to be adjusted. Always check with your team.' },
+  { q: 'Can I leave the study at any time?', a: 'Yes. Participation is voluntary, and you can withdraw at any time.' },
+  { q: 'Will this study cure my disease?', a: 'Clinical trials are research studies and may or may not provide direct benefit.' },
+  { q: 'What happens if the treatment does not work?', a: 'Your doctor will discuss other options if the study treatment is not effective.' },
+  { q: 'Will I be monitored closely?', a: 'Yes. Clinical trials often include close monitoring for safety.' },
+  { q: 'Will I still see my regular doctor?', a: 'Usually yes, along with the research team.' },
+  { q: 'Do I have to pay for anything?', a: 'Some costs may be covered by the study. Ask your team about details.' },
+  { q: 'Will insurance be involved?', a: 'Standard care is often billed to insurance, while study-specific procedures may be covered by the sponsor.' },
+  { q: 'Can I travel during the study?', a: 'You should discuss travel plans with your research team.' },
+  { q: 'What happens during screening?', a: 'Screening determines if the study is a good fit for you.' },
+  { q: 'What is informed consent?', a: 'It is a document explaining the study that you review before participating.' },
+  { q: 'Do I have to sign consent?', a: 'Yes, before any study procedures begin.' },
+  { q: 'Can I ask questions before signing?', a: 'Yes, and you should ask as many questions as needed.' },
+  { q: 'Will I get a copy of the consent?', a: 'Yes, you should receive a copy.' },
+  { q: 'What is a study visit?', a: 'A study visit is a visit where study-related procedures are performed.' },
+  { q: 'What is a cycle?', a: 'A cycle is a repeating period of treatment.' },
+  { q: 'Will I receive the same treatment every visit?', a: 'Not always. Some visits are different.' },
+  { q: 'What should I bring to visits?', a: 'Bring your medication list, questions, and any symptom updates.' },
+  { q: 'Can I eat before visits?', a: 'Some visits require fasting. Your team will tell you.' },
+  { q: 'Will I need someone to drive me?', a: 'Some treatments may require assistance. Ask your team.' },
+  { q: 'What if I miss a visit?', a: 'Contact your team as soon as possible.' },
+  { q: 'Will I receive reminders?', a: 'Some sites provide reminders, but always confirm your schedule.' },
+  { q: 'What happens after the study ends?', a: 'You may enter follow-up or return to standard care.' },
+  { q: 'Will I continue to be monitored after treatment?', a: 'Some studies include follow-up visits or calls.' },
+  { q: 'Will my data be kept private?', a: 'Yes, your information is handled confidentially.' },
+  { q: 'Can I switch studies later?', a: 'Possibly, depending on your condition and options.' },
+  { q: 'Will this affect my future treatments?', a: 'Your doctor will consider this in your care plan.' },
+  { q: 'What if I change my mind?', a: 'You can withdraw at any time.' },
+  { q: 'Will I receive results from the study?', a: 'Sometimes results are shared, but not always immediately.' },
+  { q: 'What is a sponsor?', a: 'The sponsor is the organization running the study.' },
+  { q: 'Who is the research team?', a: 'Doctors, nurses, and coordinators manage the study.' },
+  { q: 'What is safety monitoring?', a: 'Safety monitoring means ongoing checks to ensure patient safety during the study.' },
+  { q: 'What are labs monitoring?', a: 'They help track your body’s response to treatment and watch for side effects.' },
+  { q: 'Will I feel different during the study?', a: 'Possibly. Always report any changes to your team.' },
+  { q: 'How do I prepare for visits?', a: 'Follow the instructions given by your team.' },
+  { q: 'Can I ask questions anytime?', a: 'Yes. Communication is encouraged.' },
+  { q: 'Who should I contact after hours?', a: 'Ask your team for the after-hours contact process before you need it.' }
+];
 
 const demoEnhancedStudy = {
   ok: true,
   NCTId: DEMO_NCT,
-  title: "A Study of Aurora-01 in Patients With Relapsed Leukemia",
-  condition: "Relapsed Acute Leukemia",
-  phase: "PHASE 2",
-  status: "ACTIVE",
-  sponsor: "My Trial Journey Biotech",
+  title: 'A Study of Aurora-01 in Patients With Relapsed Leukemia',
+  condition: 'Relapsed Acute Leukemia',
+  phase: 'PHASE 2',
+  status: 'ACTIVE',
+  sponsor: 'My Trial Journey Biotech',
   summary:
-    "Aurora-01 is an investigational therapy being studied in patients with relapsed leukemia. This demo enhanced journey shows how a richer patient experience could look inside the app.",
-  whyThisMatters:
-    "This study explores whether Aurora-01 may help control relapsed leukemia while the research team closely monitors safety and response.",
+    'This study is evaluating Aurora-01 in patients with relapsed leukemia. The goal is to better understand how this treatment works, how safe it is, and how patients respond over time.',
+  participation:
+    'Participation may involve screening tests, clinic visits, blood tests, treatment visits, and close monitoring for side effects. Your research team will explain your exact schedule and instructions.',
   treatment:
-    "Aurora-01 investigational drug",
+    'Aurora-01 investigational drug',
   howGiven:
-    "Intravenous infusion during scheduled study visits",
-  disclaimer:
-    "This app is for educational purposes only and does not replace medical advice. Always follow instructions from your care team.",
-  todayMessage:
-    "Your enhanced journey is active. Review your upcoming visits and bring any questions to your study team.",
-  questions: [
-    {
-      q: "What is this study testing?",
-      a: "This study is testing Aurora-01, an investigational treatment for patients with relapsed leukemia."
-    },
-    {
-      q: "Will every visit be the same?",
-      a: "No. Some visits are shorter and focused on labs or symptom review, while others may include treatment and closer monitoring."
-    },
-    {
-      q: "What should I bring to visits?",
-      a: "Bring your medication list, any questions for the team, and let them know about any new or worsening symptoms."
-    },
-    {
-      q: "Why do some visits take longer?",
-      a: "Certain visits may include labs, physical exams, treatment, and observation after the infusion."
-    }
+    'Intravenous infusion during scheduled study visits',
+  questionsToAskTeam: [
+    'How often are visits expected during the first cycle?',
+    'What symptoms should I report right away?',
+    'Will I need extra labs or scans during treatment?',
+    'Who should I call if I feel unwell after hours?'
   ],
+  disclaimer:
+    'This app is for educational purposes only and does not replace medical advice. Always follow instructions from your care team.',
+  todayMessage:
+    'Review your upcoming visits, note any symptoms, and bring your questions to the study team.',
+  questions: [...patientQuestions],
   visits: [
     {
-      code: "SCR",
-      shortLabel: "Screening",
-      title: "Screening Visit",
-      subtitle: "Eligibility and baseline assessments",
-      timeEstimate: "3–5 hrs",
-      marker: "SCR",
+      code: 'SCR',
+      shortLabel: 'Screening',
+      title: 'Screening Visit',
+      subtitle: 'Eligibility and baseline assessments',
+      timeEstimate: '3–5 hrs',
+      marker: 'SCR',
       expect:
-        "This visit may include blood work, a physical exam, and baseline tests to confirm that the study is a good fit.",
+        'This visit may include blood work, a physical exam, and baseline tests to confirm that the study is a good fit.',
       tip:
-        "Bring your medication list and be ready to review your medical history.",
+        'Bring your medication list and be ready to review your medical history.',
       procedures: [
-        { icon: "🧪", title: "Blood tests", note: "Routine and study-required labs may be collected." },
-        { icon: "🩺", title: "Physical exam", note: "Your research team may review your current health status." },
-        { icon: "📝", title: "Eligibility review", note: "The team confirms study requirements and next steps." }
+        { icon: '🧪', title: 'Blood tests', note: 'Routine and study-required labs may be collected.' },
+        { icon: '🩺', title: 'Physical exam', note: 'Your research team may review your current health status.' },
+        { icon: '📝', title: 'Eligibility review', note: 'The team confirms study requirements and next steps.' }
       ]
     },
     {
-      code: "C1D1",
-      shortLabel: "C1D1",
-      title: "Cycle 1 Day 1",
-      subtitle: "First treatment visit",
-      timeEstimate: "Most of day",
-      marker: "1.1",
+      code: 'C1D1',
+      shortLabel: 'C1D1',
+      title: 'Cycle 1 Day 1',
+      subtitle: 'First treatment visit',
+      timeEstimate: 'Most of day',
+      marker: '1.1',
       expect:
-        "Your first treatment visit may be longer because it can include labs, treatment, and monitoring after infusion.",
+        'Your first treatment visit may be longer because it can include labs, treatment, and monitoring after infusion.',
       tip:
-        "Plan extra time and ask your team if there are any special instructions before treatment.",
+        'Plan extra time and ask your team if there are any special instructions before treatment.',
       procedures: [
-        { icon: "💉", title: "Study drug infusion", note: "Aurora-01 may be given during this visit." },
-        { icon: "🧪", title: "Pre-treatment labs", note: "Labs may be checked before treatment begins." },
-        { icon: "👀", title: "Observation", note: "You may be monitored after treatment for safety." }
+        { icon: '💉', title: 'Study drug infusion', note: 'Aurora-01 may be given during this visit.' },
+        { icon: '🧪', title: 'Pre-treatment labs', note: 'Labs may be checked before treatment begins.' },
+        { icon: '👀', title: 'Observation', note: 'You may be monitored after treatment for safety.' }
       ]
     },
     {
-      code: "C1D8",
-      shortLabel: "C1D8",
-      title: "Cycle 1 Day 8",
-      subtitle: "Early follow-up visit",
-      timeEstimate: "2–4 hrs",
-      marker: "1.8",
+      code: 'C1D8',
+      shortLabel: 'C1D8',
+      title: 'Cycle 1 Day 8',
+      subtitle: 'Early follow-up visit',
+      timeEstimate: '2–4 hrs',
+      marker: '1.8',
       expect:
-        "This visit may focus on safety, symptom review, and lab monitoring after the first treatment.",
+        'This visit may focus on safety, symptom review, and lab monitoring after the first treatment.',
       tip:
-        "Write down any side effects or questions since your last visit.",
+        'Write down any side effects or questions since your last visit.',
       procedures: [
-        { icon: "🧪", title: "Blood tests", note: "Lab work may help monitor how you are doing on study." },
-        { icon: "💬", title: "Symptom review", note: "The team may ask about any side effects or changes." }
+        { icon: '🧪', title: 'Blood tests', note: 'Lab work may help monitor how you are doing on study.' },
+        { icon: '💬', title: 'Symptom review', note: 'The team may ask about any side effects or changes.' }
       ]
     },
     {
-      code: "C1D15",
-      shortLabel: "C1D15",
-      title: "Cycle 1 Day 15",
-      subtitle: "Ongoing treatment follow-up",
-      timeEstimate: "2–4 hrs",
-      marker: "1.15",
+      code: 'C1D15',
+      shortLabel: 'C1D15',
+      title: 'Cycle 1 Day 15',
+      subtitle: 'Ongoing treatment follow-up',
+      timeEstimate: '2–4 hrs',
+      marker: '1.15',
       expect:
-        "Ongoing monitoring and additional study procedures may happen depending on how you are doing.",
+        'Ongoing monitoring and additional study procedures may happen depending on how you are doing.',
       tip:
-        "Tell the team about any new medications, ER visits, or symptoms.",
+        'Tell the team about any new medications, ER visits, or symptoms.',
       procedures: [
-        { icon: "🧪", title: "Labs", note: "Routine study labs may be repeated." },
-        { icon: "🩺", title: "Clinical review", note: "The team checks your overall status and study progress." }
+        { icon: '🧪', title: 'Labs', note: 'Routine study labs may be repeated.' },
+        { icon: '🩺', title: 'Clinical review', note: 'The team checks your overall status and study progress.' }
       ]
     },
     {
-      code: "C2D1",
-      shortLabel: "C2D1",
-      title: "Cycle 2 Day 1",
-      subtitle: "Next cycle treatment visit",
-      timeEstimate: "2–5 hrs",
-      marker: "2.1",
+      code: 'C2D1',
+      shortLabel: 'C2D1',
+      title: 'Cycle 2 Day 1',
+      subtitle: 'Next cycle treatment visit',
+      timeEstimate: '2–5 hrs',
+      marker: '2.1',
       expect:
-        "This visit may include another treatment day, labs, and ongoing safety monitoring.",
+        'This visit may include another treatment day, labs, and ongoing safety monitoring.',
       tip:
-        "Confirm the schedule with your team and bring any new questions.",
+        'Confirm the schedule with your team and bring any new questions.',
       procedures: [
-        { icon: "💉", title: "Study treatment", note: "Treatment may continue according to the study schedule." },
-        { icon: "🧪", title: "Blood tests", note: "Labs may be checked before and/or after treatment." },
-        { icon: "📝", title: "Study review", note: "Medications and side effects may be reviewed." }
+        { icon: '💉', title: 'Study treatment', note: 'Treatment may continue according to the study schedule.' },
+        { icon: '🧪', title: 'Blood tests', note: 'Labs may be checked before and/or after treatment.' },
+        { icon: '📝', title: 'Study review', note: 'Medications and side effects may be reviewed.' }
       ]
     }
   ],
   journeySteps: [
-    { title: "Screening", subtitle: "Before treatment starts", state: "complete" },
-    { title: "Treatment", subtitle: "Visit-by-visit journey", state: "current" },
-    { title: "Follow-up", subtitle: "After treatment ends", state: "upcoming" }
+    { title: 'Screening', subtitle: 'Before treatment starts', state: 'complete' },
+    { title: 'Treatment', subtitle: 'Visit-by-visit journey', state: 'current' },
+    { title: 'Follow-up', subtitle: 'After treatment ends', state: 'upcoming' }
   ]
 };
-
-const basicQuestions = [
-  {
-    q: "What is a clinical trial?",
-    a: "A clinical trial is a research study designed to learn more about a treatment, including how safe it is and how well it may work."
-  },
-  {
-    q: "What happens during a study visit?",
-    a: "Visits may include lab tests, physical exams, treatment, or study-related assessments depending on the study."
-  },
-  {
-    q: "What should I bring to visits?",
-    a: "Bring your medication list, any new symptoms, and questions you may want to discuss with your team."
-  },
-  {
-    q: "Who should I contact if I feel unwell?",
-    a: "Your research team or treating physician is your primary contact for symptoms or concerns."
-  }
-];
 
 const state = {
   user: { firstName: '', nct: '' },
@@ -172,8 +195,49 @@ const state = {
   selectedVisitCode: null
 };
 
+function setPrimaryButtonText() {
+  const continueBtn = document.getElementById('continueBtn');
+  if (continueBtn) continueBtn.textContent = 'START MY JOURNEY';
+}
+
+function hideInternalModeIndicators() {
+  if (modePill) modePill.style.display = 'none';
+  const experienceBadge = document.getElementById('experienceBadge');
+  if (experienceBadge) experienceBadge.style.display = 'none';
+}
+
+function improveJourneyLayout() {
+  const screenJourney = document.getElementById('screen-journey');
+  const visitCard = document.getElementById('visitDetailsCard');
+  const ribbonWrap = document.getElementById('visitRibbon')?.closest('.stack');
+  const sectionHeader = screenJourney?.querySelector('.section-header');
+  const journeySubnav = screenJourney?.querySelector('.journey-subnav');
+
+  if (journeySubnav) {
+    const calendarShortcut = journeySubnav.querySelector('[data-target="calendar"]');
+    if (calendarShortcut) calendarShortcut.style.display = 'none';
+  }
+
+  if (screenJourney && sectionHeader && ribbonWrap && visitCard) {
+    sectionHeader.insertAdjacentElement('afterend', ribbonWrap);
+    ribbonWrap.insertAdjacentElement('afterend', visitCard);
+  }
+}
+
+function relabelJourneyCards() {
+  const summaryLabel = document.getElementById('trialSummary')?.closest('.card')?.querySelector('.mini-label');
+  const participationLabel = document.getElementById('trialWhyItMatters')?.closest('.card')?.querySelector('.mini-label');
+  const treatmentLabel = document.getElementById('trialTreatment')?.closest('.card')?.querySelector('.mini-label');
+  const disclaimerLabel = document.getElementById('trialDisclaimer')?.closest('.card')?.querySelector('.mini-label');
+
+  if (summaryLabel) summaryLabel.textContent = 'About this study';
+  if (participationLabel) participationLabel.textContent = 'What participation may involve';
+  if (treatmentLabel) treatmentLabel.textContent = 'Treatment being studied';
+  if (disclaimerLabel) disclaimerLabel.textContent = 'Questions to ask your team';
+}
+
 function showScreen(name) {
-  Object.values(screens).forEach(s => s.classList.remove('active'));
+  Object.values(screens).forEach(screen => screen.classList.remove('active'));
   if (screens[name]) screens[name].classList.add('active');
 
   const showNav = ['home', 'journey', 'more'].includes(name);
@@ -214,7 +278,6 @@ function loadSavedState() {
     state.enhanced = !!parsed.enhanced;
     state.selectedVisitCode = parsed.selectedVisitCode || null;
 
-    setModePill();
     renderAll();
     showMainScreen('home');
   } catch (err) {
@@ -222,9 +285,21 @@ function loadSavedState() {
   }
 }
 
-function setModePill() {
-  if (!modePill) return;
-  modePill.textContent = state.enhanced ? 'Enhanced mode' : 'Basic mode';
+function toSentenceCase(value) {
+  if (!value || typeof value !== 'string') return 'N/A';
+  const normalized = value.replaceAll('_', ' ').toLowerCase();
+  return normalized.charAt(0).toUpperCase() + normalized.slice(1);
+}
+
+function cleanSummary(text) {
+  if (!text || typeof text !== 'string') {
+    return 'This study is evaluating a treatment for your condition.';
+  }
+
+  return text
+    .replace(/\s+/g, ' ')
+    .replace(/This study was loaded from ClinicalTrials\.gov.*$/i, '')
+    .trim();
 }
 
 function getBasicStudyModel(apiData) {
@@ -235,18 +310,22 @@ function getBasicStudyModel(apiData) {
     phase: apiData.phase || 'N/A',
     status: apiData.status || 'N/A',
     sponsor: apiData.sponsor || 'ClinicalTrials.gov',
-    summary: `This study was loaded from ClinicalTrials.gov using ${apiData.NCTId}. The basic version provides a simple patient-facing overview.`,
-    whyThisMatters:
-      'This basic experience helps patients understand the study at a high level using public information.',
-    treatment:
-      'Study treatment details may vary by protocol.',
-    howGiven:
-      'May vary by study',
+    summary: cleanSummary(apiData.summary),
+    participation:
+      'Participation may involve clinic visits, blood tests, treatment visits, and monitoring for side effects. Your research team will explain your exact schedule and instructions.',
+    treatment: apiData.intervention || 'Investigational treatment under study',
+    howGiven: 'Ask your team how the study treatment is given and how often visits are expected.',
+    questionsToAskTeam: [
+      'How often will I need to come to the clinic?',
+      'What side effects should I report immediately?',
+      'Will I need additional tests or scans?',
+      'Who should I contact if I feel unwell after hours?'
+    ],
     disclaimer:
       'This app is for educational purposes only and does not replace medical advice. Always follow instructions from your care team.',
     todayMessage:
-      'Bring your medication list and keep track of any new questions for your care team.',
-    questions: [...basicQuestions],
+      'Review the study overview, write down your questions, and confirm details with your research team.',
+    questions: [...patientQuestions],
     visits: [
       {
         code: 'OVERVIEW',
@@ -256,13 +335,13 @@ function getBasicStudyModel(apiData) {
         timeEstimate: 'Varies',
         marker: 'GEN',
         expect:
-          'The basic experience focuses on a high-level understanding of the study rather than detailed protocol-based visits.',
+          'Your exact visit schedule depends on the study and on your care team’s instructions.',
         tip:
-          'Ask your care team about the exact structure and requirements of your scheduled visits.',
+          'Ask your team about visit timing, required labs, and who to contact with symptoms.',
         procedures: [
-          { icon: '📘', title: 'Study overview', note: 'Basic studies show public information such as title, phase, sponsor, and condition.' },
-          { icon: '🧭', title: 'General journey', note: 'The basic experience outlines a simpler overall journey.' },
-          { icon: '💬', title: 'Questions', note: 'Patients can review short answers to common questions.' }
+          { icon: '📘', title: 'Study overview', note: 'Public study details such as title, sponsor, condition, and phase.' },
+          { icon: '🧪', title: 'Possible monitoring', note: 'Participation may involve labs, clinic visits, scans, or treatment visits.' },
+          { icon: '💬', title: 'Questions for your team', note: 'Use this app to prepare questions for your care team.' }
         ]
       }
     ],
@@ -290,7 +369,6 @@ function renderHome() {
   const studyMetaHome = document.getElementById('studyMetaHome');
   const studyNctChip = document.getElementById('studyNctChip');
   const todayMessage = document.getElementById('todayMessage');
-  const experienceBadge = document.getElementById('experienceBadge');
   const homeMetaLine = document.getElementById('homeMetaLine');
   const progressSnapshot = document.getElementById('progressSnapshot');
 
@@ -299,15 +377,14 @@ function renderHome() {
   if (studyTitleHome) studyTitleHome.textContent = state.study.title;
   if (studyMetaHome) {
     studyMetaHome.textContent =
-      `${state.study.phase} • ${state.study.condition} • ${state.study.sponsor}`;
+      `${toSentenceCase(state.study.phase)} • ${state.study.condition} • ${state.study.sponsor}`;
   }
   if (studyNctChip) studyNctChip.textContent = state.study.NCTId;
   if (todayMessage) todayMessage.textContent = state.study.todayMessage || '';
-  if (experienceBadge) experienceBadge.textContent = state.enhanced ? 'Enhanced' : 'Basic';
 
   if (homeMetaLine) {
     homeMetaLine.innerHTML = '';
-    [state.study.phase, state.study.condition, state.study.status].forEach(value => {
+    [toSentenceCase(state.study.phase), state.study.condition, toSentenceCase(state.study.status)].forEach(value => {
       const pill = document.createElement('span');
       pill.className = 'meta-pill';
       pill.textContent = value || 'N/A';
@@ -333,8 +410,15 @@ function renderHome() {
   }
 }
 
+function formatQuestionList(list) {
+  if (!Array.isArray(list) || !list.length) return '—';
+  return list.map(item => `• ${item}`).join('<br>');
+}
+
 function renderJourney() {
   if (!state.study) return;
+
+  relabelJourneyCards();
 
   const trialAppTitle = document.getElementById('trialAppTitle');
   const trialSummary = document.getElementById('trialSummary');
@@ -346,34 +430,47 @@ function renderJourney() {
 
   if (trialAppTitle) trialAppTitle.textContent = state.study.title;
   if (trialSummary) trialSummary.textContent = state.study.summary || '—';
-  if (trialWhyItMatters) trialWhyItMatters.textContent = state.study.whyThisMatters || '—';
+  if (trialWhyItMatters) trialWhyItMatters.textContent = state.study.participation || '—';
   if (trialTreatment) trialTreatment.textContent = state.study.treatment || '—';
   if (trialHowGiven) trialHowGiven.textContent = state.study.howGiven || '—';
-  if (trialDisclaimer) trialDisclaimer.textContent = state.study.disclaimer || '—';
-  if (journeyOverviewPill) journeyOverviewPill.textContent = `${state.study.phase} • ${state.study.sponsor}`;
+  if (trialDisclaimer) {
+    trialDisclaimer.innerHTML = formatQuestionList(state.study.questionsToAskTeam || []);
+  }
+  if (journeyOverviewPill) {
+    journeyOverviewPill.textContent = `${toSentenceCase(state.study.phase)} • ${state.study.sponsor}`;
+  }
 
   renderVisitRibbonAndDetails();
 }
 
 function renderVisitRibbonAndDetails() {
   const ribbon = document.getElementById('visitRibbon');
-  const journeyModePill = document.getElementById('journeyModePill');
+  const visitDetailsCard = document.getElementById('visitDetailsCard');
   const basicJourneyNote = document.getElementById('basicJourneyNote');
 
-  if (!ribbon) return;
+  if (!ribbon || !visitDetailsCard) return;
 
   const visits = state.study.visits || [];
   if (!state.selectedVisitCode && visits.length) {
     state.selectedVisitCode = visits[0].code;
   }
 
+  if (!state.enhanced) {
+    ribbon.innerHTML = '';
+    visitDetailsCard.style.display = 'none';
+
+    if (basicJourneyNote) {
+      basicJourneyNote.style.display = 'block';
+      basicJourneyNote.textContent =
+        'Your exact visit schedule will be explained by your research team. In many studies, participation may include screening tests, clinic visits, blood tests, treatment visits, and safety monitoring.';
+    }
+    return;
+  }
+
+  visitDetailsCard.style.display = 'grid';
+  if (basicJourneyNote) basicJourneyNote.style.display = 'none';
+
   ribbon.innerHTML = '';
-  if (journeyModePill) {
-    journeyModePill.textContent = state.enhanced ? 'Enhanced ribbon' : 'Basic journey';
-  }
-  if (basicJourneyNote) {
-    basicJourneyNote.style.display = state.enhanced ? 'none' : 'block';
-  }
 
   visits.forEach(visit => {
     const btn = document.createElement('button');
@@ -443,9 +540,8 @@ function renderMore() {
   const moreDisclaimer = document.getElementById('moreDisclaimer');
 
   if (moreExperienceText) {
-    moreExperienceText.textContent = state.enhanced
-      ? 'This study is currently using the enhanced experience.'
-      : 'This study is currently using the basic experience.';
+    moreExperienceText.textContent =
+      'This app is designed to help you understand your study and stay informed during your participation.';
   }
 
   if (moreDisclaimer) {
@@ -461,7 +557,7 @@ async function loadStudy() {
   const isDemoNCT = nct === DEMO_NCT;
 
   if (!isRealNCT && !isDemoNCT) {
-    alert("Invalid NCT format. Use NCT######## or NCTDEMO0001.");
+    alert('Invalid NCT format. Use NCT######## or NCTDEMO0001.');
     return;
   }
 
@@ -478,8 +574,8 @@ async function loadStudy() {
     const data = await res.json();
 
     if (!res.ok || !data.ok) {
-      console.error("Backend error:", data);
-      alert(`Backend error: ${data.error || "Unknown error"}`);
+      console.error('Backend error:', data);
+      alert(`Backend error: ${data.error || 'Unknown error'}`);
       return;
     }
 
@@ -487,12 +583,11 @@ async function loadStudy() {
     state.study = getBasicStudyModel(data);
     state.selectedVisitCode = state.study.visits?.[0]?.code || null;
 
-    setModePill();
     renderAll();
     saveState();
     showMainScreen('home');
   } catch (e) {
-    console.error("Frontend fetch error:", e);
+    console.error('Frontend fetch error:', e);
     alert(`Frontend error: ${e.message}`);
   }
 }
@@ -505,7 +600,6 @@ function unlockDemoStudy() {
     state.study = { ...demoEnhancedStudy };
     state.selectedVisitCode = state.study.visits?.[0]?.code || null;
 
-    setModePill();
     renderAll();
     saveState();
     showMainScreen('home');
@@ -552,14 +646,10 @@ document.querySelectorAll('.demo-code').forEach(btn => {
 });
 
 const continueBtn = document.getElementById('continueBtn');
-if (continueBtn) {
-  continueBtn.addEventListener('click', loadStudy);
-}
+if (continueBtn) continueBtn.addEventListener('click', loadStudy);
 
 const unlockBtn = document.getElementById('unlockBtn');
-if (unlockBtn) {
-  unlockBtn.addEventListener('click', unlockDemoStudy);
-}
+if (unlockBtn) unlockBtn.addEventListener('click', unlockDemoStudy);
 
 const backToEntryBtn = document.getElementById('backToEntryBtn');
 if (backToEntryBtn) {
@@ -581,11 +671,14 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
   });
 });
 
-setTimeout(() => {
-  if (!state.study) showScreen('entry');
-}, 1000);
-
 window.addEventListener('load', () => {
+  setPrimaryButtonText();
+  hideInternalModeIndicators();
+  improveJourneyLayout();
+  relabelJourneyCards();
   loadSavedState();
-  setModePill();
+
+  setTimeout(() => {
+    if (!state.study) showScreen('entry');
+  }, 1000);
 });
