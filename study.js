@@ -5,6 +5,7 @@ const screens = {
   home: document.getElementById('screen-home'),
   trial: document.getElementById('screen-trial'),
   journey: document.getElementById('screen-journey'),
+  overview: document.getElementById('screen-overview'),
   calendar: document.getElementById('screen-calendar'),
   questions: document.getElementById('screen-questions'),
   more: document.getElementById('screen-more')
@@ -333,6 +334,7 @@ function showMainScreen(name) {
 
   if (name === 'home') renderHome();
   if (name === 'journey') renderJourney();
+  if (name === 'overview') renderStudyOverview();
   if (name === 'questions') renderQuestions();
   if (name === 'more') renderMore();
 }
@@ -361,12 +363,6 @@ function loadSavedState() {
   }
 }
 
-function toSentenceCase(value) {
-  if (!value || typeof value !== 'string') return 'N/A';
-  const normalized = value.replaceAll('_', ' ').toLowerCase();
-  return normalized.charAt(0).toUpperCase() + normalized.slice(1);
-}
-
 function cleanSummary(text) {
   if (!text || typeof text !== 'string') {
     return 'This study is evaluating a treatment for your condition.';
@@ -391,16 +387,8 @@ function getBasicStudyModel(apiData) {
       'Participation may involve clinic visits, blood tests, treatment visits, and monitoring for side effects. Your research team will explain your exact schedule and instructions.',
     treatment: apiData.intervention || 'Investigational treatment under study',
     howGiven: 'Ask your team how the study treatment is given and how often visits are expected.',
-    questionsToAskTeam: [
-      'How often will I need to come to the clinic?',
-      'What side effects should I report immediately?',
-      'Will I need additional tests or scans?',
-      'Who should I contact if I feel unwell after hours?'
-    ],
     disclaimer:
       'This app is for educational purposes only and does not replace medical advice. Always follow instructions from your care team.',
-    todayMessage:
-      'Review the study overview, write down your questions, and confirm details with your research team.',
     questions: [...patientQuestions],
     helpfulTips: [
       'Write questions down between visits so you do not forget them.',
@@ -418,6 +406,7 @@ function getBasicStudyModel(apiData) {
 function renderAll() {
   renderHome();
   renderJourney();
+  renderStudyOverview();
   renderQuestions();
   renderMore();
 }
@@ -437,13 +426,14 @@ function renderHome() {
 function renderJourney() {
   if (!state.study) return;
 
-  renderStudyOverview();
   renderVisitRibbonAndDetails();
   renderAdverseEvents();
   renderHelpfulTips();
 }
 
 function renderStudyOverview() {
+  if (!state.study) return;
+
   const trialAppTitle = document.getElementById('trialAppTitle');
   const trialSummary = document.getElementById('trialSummary');
   const trialWhyItMatters = document.getElementById('trialWhyItMatters');
@@ -792,12 +782,7 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
 
 const studyOverviewBtn = document.getElementById('studyOverviewBtn');
 if (studyOverviewBtn) {
-  studyOverviewBtn.addEventListener('click', () => openModal('studyOverviewModal'));
-}
-
-const closeStudyOverviewModal = document.getElementById('closeStudyOverviewModal');
-if (closeStudyOverviewModal) {
-  closeStudyOverviewModal.addEventListener('click', () => closeModal('studyOverviewModal'));
+  studyOverviewBtn.addEventListener('click', () => showMainScreen('overview'));
 }
 
 const adverseEventsBtn = document.getElementById('adverseEventsBtn');
