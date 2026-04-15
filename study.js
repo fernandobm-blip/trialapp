@@ -11,63 +11,157 @@ const screens = {
 };
 
 const bottomNav = document.getElementById('bottomNav');
-const modePill = document.getElementById('modePill');
 
 const DEMO_NCT = 'NCTDEMO0001';
 const DEMO_CODE = 'DEMO001';
 
-const patientQuestions = [
-  { q: 'What is a clinical trial?', a: 'A clinical trial is a research study that tests new treatments or new ways of using existing treatments.' },
-  { q: 'Why am I being offered this study?', a: 'Your doctor believes this study may be an option for your condition based on your medical history.' },
-  { q: 'Is this treatment approved?', a: 'Not always. Many clinical trials study investigational treatments that are not yet approved.' },
-  { q: 'What is the goal of this study?', a: 'The goal is usually to understand safety, effectiveness, or both.' },
-  { q: 'Will I definitely receive treatment?', a: 'It depends. Some studies include different groups or treatment arms.' },
-  { q: 'How often will I need to come to the clinic?', a: 'Visit frequency varies by study. Your team will provide your exact schedule.' },
-  { q: 'How long does each visit take?', a: 'Some visits are short, while others may take several hours depending on procedures.' },
-  { q: 'Will I need blood tests?', a: 'Most studies include blood tests to monitor your health and the effects of treatment.' },
-  { q: 'Will I need scans or imaging?', a: 'Some studies require scans to monitor disease response.' },
-  { q: 'Will I need biopsies?', a: 'Some studies include biopsies, but not all. Ask your team whether they are required in your case.' },
-  { q: 'What side effects should I expect?', a: 'Side effects vary depending on the treatment. Your team will explain what to watch for.' },
-  { q: 'What side effects are urgent?', a: 'Your care team will tell you which symptoms should be reported immediately.' },
-  { q: 'Who do I call if I feel unwell?', a: 'You should contact your study team or treating physician.' },
-  { q: 'Can I continue my current medications?', a: 'Some medications may need to be adjusted. Always check with your team.' },
-  { q: 'Can I leave the study at any time?', a: 'Yes. Participation is voluntary, and you can withdraw at any time.' },
-  { q: 'Will this study cure my disease?', a: 'Clinical trials are research studies and may or may not provide direct benefit.' },
-  { q: 'What happens if the treatment does not work?', a: 'Your doctor will discuss other options if the study treatment is not effective.' },
-  { q: 'Will I be monitored closely?', a: 'Yes. Clinical trials often include close monitoring for safety.' },
-  { q: 'Will I still see my regular doctor?', a: 'Usually yes, along with the research team.' },
-  { q: 'Do I have to pay for anything?', a: 'Some costs may be covered by the study. Ask your team about details.' },
-  { q: 'Will insurance be involved?', a: 'Standard care is often billed to insurance, while study-specific procedures may be covered by the sponsor.' },
-  { q: 'Can I travel during the study?', a: 'You should discuss travel plans with your research team.' },
-  { q: 'What happens during screening?', a: 'Screening determines if the study is a good fit for you.' },
-  { q: 'What is informed consent?', a: 'It is a document explaining the study that you review before participating.' },
-  { q: 'Do I have to sign consent?', a: 'Yes, before any study procedures begin.' },
-  { q: 'Can I ask questions before signing?', a: 'Yes, and you should ask as many questions as needed.' },
-  { q: 'Will I get a copy of the consent?', a: 'Yes, you should receive a copy.' },
-  { q: 'What is a study visit?', a: 'A study visit is a visit where study-related procedures are performed.' },
-  { q: 'What is a cycle?', a: 'A cycle is a repeating period of treatment.' },
-  { q: 'Will I receive the same treatment every visit?', a: 'Not always. Some visits are different.' },
-  { q: 'What should I bring to visits?', a: 'Bring your medication list, questions, and any symptom updates.' },
-  { q: 'Can I eat before visits?', a: 'Some visits require fasting. Your team will tell you.' },
-  { q: 'Will I need someone to drive me?', a: 'Some treatments may require assistance. Ask your team.' },
-  { q: 'What if I miss a visit?', a: 'Contact your team as soon as possible.' },
-  { q: 'Will I receive reminders?', a: 'Some sites provide reminders, but always confirm your schedule.' },
-  { q: 'What happens after the study ends?', a: 'You may enter follow-up or return to standard care.' },
-  { q: 'Will I continue to be monitored after treatment?', a: 'Some studies include follow-up visits or calls.' },
-  { q: 'Will my data be kept private?', a: 'Yes, your information is handled confidentially.' },
-  { q: 'Can I switch studies later?', a: 'Possibly, depending on your condition and options.' },
-  { q: 'Will this affect my future treatments?', a: 'Your doctor will consider this in your care plan.' },
-  { q: 'What if I change my mind?', a: 'You can withdraw at any time.' },
-  { q: 'Will I receive results from the study?', a: 'Sometimes results are shared, but not always immediately.' },
-  { q: 'What is a sponsor?', a: 'The sponsor is the organization running the study.' },
-  { q: 'Who is the research team?', a: 'Doctors, nurses, and coordinators manage the study.' },
-  { q: 'What is safety monitoring?', a: 'Safety monitoring means ongoing checks to ensure patient safety during the study.' },
-  { q: 'What are labs monitoring?', a: 'They help track your body’s response to treatment and watch for side effects.' },
-  { q: 'Will I feel different during the study?', a: 'Possibly. Always report any changes to your team.' },
-  { q: 'How do I prepare for visits?', a: 'Follow the instructions given by your team.' },
-  { q: 'Can I ask questions anytime?', a: 'Yes. Communication is encouraged.' },
-  { q: 'Who should I contact after hours?', a: 'Ask your team for the after-hours contact process before you need it.' }
-];
+const QUESTION_BANK = {
+  "Understanding clinical trials": [
+    { q: "What is a clinical trial?", a: "A clinical trial is a research study that tests new treatments or new ways of using existing treatments." },
+    { q: "Why am I being offered a clinical trial?", a: "Your doctor believes this study may be an option for your condition based on your medical history and current treatment plan." },
+    { q: "What is the goal of a clinical trial?", a: "The goal is usually to understand safety, effectiveness, or both." },
+    { q: "Is the treatment in a clinical trial always new?", a: "Not always. Some trials study new drugs, while others study new combinations, schedules, or ways of using existing treatments." },
+    { q: "Does joining a trial mean standard treatment has failed?", a: "Not necessarily. Some studies are offered early, while others are offered later. Your doctor can explain why this study is being considered now." },
+    { q: "Who runs a clinical trial?", a: "A sponsor supports the study, and a research team at your treatment center carries it out." },
+    { q: "Will I definitely benefit from joining?", a: "Clinical trials are research studies, so direct benefit is not guaranteed." },
+    { q: "Is a clinical trial the same as an experiment?", a: "Clinical trials are carefully designed research studies with rules, oversight, and patient protections." },
+    { q: "How is safety monitored in a study?", a: "Your health is monitored through visits, tests, symptom review, and reporting requirements throughout the study." },
+    { q: "Can I ask questions before deciding?", a: "Yes. You should ask as many questions as you need before deciding whether to participate." },
+    { q: "What is informed consent?", a: "It is the process of reviewing the study with your team and signing a document that explains the purpose, risks, and procedures." },
+    { q: "Do I get a copy of the consent form?", a: "Yes, you should receive a copy of the consent form for your records." },
+    { q: "Can I take time to think before signing?", a: "Yes. You can take time to review the study and discuss it with your family or care team." },
+    { q: "Can I leave a clinical trial later?", a: "Yes. Participation is voluntary and you can withdraw at any time." },
+    { q: "Will my regular doctor still be involved?", a: "Usually yes, along with the research team." }
+  ],
+
+  "Joining a study": [
+    { q: "What happens during screening?", a: "Screening determines whether the study is a good fit for you based on eligibility criteria." },
+    { q: "What kinds of tests happen during screening?", a: "Screening may include blood tests, exams, scans, biopsies, or other assessments depending on the study." },
+    { q: "Does screening mean I am definitely enrolled?", a: "No. Screening checks whether you meet the study requirements. Enrollment happens only after eligibility is confirmed." },
+    { q: "How long does screening take?", a: "The timing varies by study. Your team will explain the expected timeline." },
+    { q: "Can I fail screening?", a: "Yes. Sometimes a study is not the right fit after testing or review." },
+    { q: "Why are there so many eligibility rules?", a: "Eligibility criteria help protect patients and make sure the study answers the right scientific questions." },
+    { q: "Can I join if I am already on treatment?", a: "It depends on the study. Some trials allow prior treatment and some do not." },
+    { q: "Can medications affect eligibility?", a: "Yes. Some medications may need to be adjusted or reviewed during screening." },
+    { q: "Can recent procedures affect eligibility?", a: "Yes. Prior surgery, radiation, biopsy timing, or other treatments may matter." },
+    { q: "Can I still ask questions after I sign consent?", a: "Yes. You can ask questions at any time during the study." },
+    { q: "Who can explain the eligibility decision to me?", a: "Your study doctor or research coordinator can explain why you were or were not eligible." },
+    { q: "What if I am not eligible?", a: "Your doctor may discuss other treatment options or other studies." },
+    { q: "Can eligibility change over time?", a: "Sometimes yes. In some cases, a study may become an option later depending on your situation." },
+    { q: "Will I know what tests are required before screening starts?", a: "Your team should explain the screening plan before the process begins." },
+    { q: "Can I bring someone with me to screening visits?", a: "In many cases yes, but you should confirm any visitor rules with your clinic." }
+  ],
+
+  "Study visits and tests": [
+    { q: "What is a study visit?", a: "A study visit is a visit where research-related procedures are done." },
+    { q: "What is a cycle?", a: "A cycle is a repeating period of treatment." },
+    { q: "How often will I need to come to the clinic?", a: "Visit frequency varies by study. Your team will provide your exact schedule." },
+    { q: "How long does each visit take?", a: "Some visits are short, while others may take several hours depending on procedures." },
+    { q: "Will every visit be the same?", a: "No. Some visits are longer or include different procedures than others." },
+    { q: "Will I need blood tests?", a: "Most studies include blood tests to monitor your health and the effects of treatment." },
+    { q: "Will I need scans or imaging?", a: "Some studies require scans to monitor disease response." },
+    { q: "Will I need biopsies?", a: "Some studies include biopsies, but not all. Ask your team whether they are required in your case." },
+    { q: "What if I miss a visit?", a: "Contact your team as soon as possible so they can advise you on next steps." },
+    { q: "Will I get a calendar or schedule?", a: "Your care team will usually provide a schedule or explain your upcoming visits." },
+    { q: "Can visit times change?", a: "Yes. Some study visits must happen within certain windows, while others are more flexible." },
+    { q: "Do I need to fast before visits?", a: "Some visits may require fasting. Your team will tell you ahead of time." },
+    { q: "Will I need extra monitoring after treatment?", a: "Some visits include observation after treatment for safety." },
+    { q: "Can I ask what each visit includes before I come?", a: "Yes. Your team can explain what to expect before a scheduled visit." },
+    { q: "What should I bring to study visits?", a: "Bring your medication list, questions, symptom updates, and anything your team specifically requested." }
+  ],
+
+  "Treatment basics": [
+    { q: "Is the treatment approved?", a: "Not always. Many clinical trials study investigational treatments that are not yet approved." },
+    { q: "Will I definitely receive treatment?", a: "It depends. Some studies include different groups or treatment arms." },
+    { q: "Will I receive the same treatment every visit?", a: "Not always. Some visits are different." },
+    { q: "How is treatment given?", a: "Treatment may be given by infusion, injection, pills, or another method depending on the study." },
+    { q: "Can I continue my current medications?", a: "Some medications may need to be adjusted. Always check with your team." },
+    { q: "Will treatment visits take longer?", a: "Often yes. Treatment visits may include labs, exams, treatment, and observation." },
+    { q: "Can treatment be delayed?", a: "Sometimes treatment may be delayed for safety reasons or if lab results need review." },
+    { q: "What happens if I cannot tolerate treatment?", a: "Your doctor may hold treatment, adjust the plan, or discuss other options." },
+    { q: "Can I ask what the treatment is meant to do?", a: "Yes. Your team can explain the purpose of the treatment and what the study is evaluating." },
+    { q: "Will the treatment cure my disease?", a: "Clinical trials are research studies, and direct benefit is not guaranteed." },
+    { q: "What if the treatment does not work?", a: "Your doctor will discuss other options if the study treatment is not effective." },
+    { q: "Will I know what treatment arm I am in?", a: "That depends on the study design. Your team can explain how your study works." },
+    { q: "Can treatment stop before the study ends?", a: "Yes. Treatment may stop for several reasons, including side effects, disease progression, or study rules." },
+    { q: "Will the team review my medications during treatment?", a: "Yes. Medication review is usually part of ongoing safety monitoring." },
+    { q: "Can I ask for the treatment schedule in advance?", a: "Yes. Your team should explain the expected treatment schedule." }
+  ],
+
+  "Safety and side effects": [
+    { q: "What side effects should I expect?", a: "Side effects vary depending on the treatment. Your team will explain what to watch for." },
+    { q: "What side effects are urgent?", a: "Your care team will tell you which symptoms should be reported immediately." },
+    { q: "Who do I call if I feel unwell?", a: "You should contact your study team or treating physician." },
+    { q: "Who should I contact after hours?", a: "Ask your team for the after-hours contact process before you need it." },
+    { q: "Will I be monitored closely?", a: "Yes. Clinical trials often include close monitoring for safety." },
+    { q: "What is safety monitoring?", a: "Safety monitoring means ongoing checks to ensure patient safety during the study." },
+    { q: "What are labs monitoring?", a: "They help track your body’s response to treatment and watch for side effects." },
+    { q: "Will I feel different during the study?", a: "Possibly. Always report any changes to your team." },
+    { q: "What symptoms should I write down?", a: "Any new or worsening symptoms, even if they seem minor, are worth noting and discussing with your team." },
+    { q: "Can side effects happen between visits?", a: "Yes. That is why it is important to know how to contact your team." },
+    { q: "Should I wait until the next visit to report symptoms?", a: "No. If symptoms are urgent or concerning, contact your care team right away." },
+    { q: "Can lab results change how treatment is given?", a: "Yes. Lab values may affect treatment timing or safety decisions." },
+    { q: "Will every symptom be caused by the study treatment?", a: "Not always. Your team will help determine what may be related." },
+    { q: "Can side effects improve after treatment is held?", a: "Sometimes yes. Your doctor will guide the safest next steps." },
+    { q: "What if I am unsure whether something matters?", a: "When in doubt, contact your team and ask." }
+  ],
+
+  "Costs and insurance": [
+    { q: "Do I have to pay for anything?", a: "Some costs may be covered by the study. Ask your team about details." },
+    { q: "Will insurance be involved?", a: "Standard care is often billed to insurance, while study-specific procedures may be covered by the sponsor." },
+    { q: "Are study drugs always paid for by the sponsor?", a: "It depends on the study. Your team can explain what is covered." },
+    { q: "Can travel costs be covered?", a: "Some studies provide support for travel or related expenses, but not all do." },
+    { q: "Who can explain coverage to me?", a: "Your research team or financial support staff can help explain how billing works." },
+    { q: "Are blood tests always paid for by the study?", a: "Not always. Some labs may be part of standard care, while others are study-specific." },
+    { q: "Can insurance deny something related to the study?", a: "It depends on the situation. Your team can help explain what is billed and why." },
+    { q: "Will I know what is covered before I start?", a: "Your team should explain the billing framework before you begin." },
+    { q: "Can I ask for help understanding costs?", a: "Yes. You should ask if anything about coverage or billing is unclear." },
+    { q: "Does joining a trial always save money?", a: "Not necessarily. Coverage varies by study and by what counts as standard care." },
+    { q: "What if I receive a bill I do not understand?", a: "Contact your care team or the billing support contact listed by your institution." },
+    { q: "Can I still join if I have insurance concerns?", a: "Possibly. Discuss concerns early so your team can help clarify what applies." },
+    { q: "Are scans always covered the same way?", a: "No. It depends on whether they are part of standard care or required specifically for the study." },
+    { q: "Can I ask these questions before consent?", a: "Yes. Financial questions are important to discuss before starting." },
+    { q: "Will this affect my usual insurance coverage?", a: "Your team can explain how study participation fits with your regular care coverage." }
+  ],
+
+  "Daily life during a study": [
+    { q: "Can I travel during the study?", a: "You should discuss travel plans with your research team." },
+    { q: "Can I continue my normal activities?", a: "Often yes, but this depends on your health, treatment, and study requirements." },
+    { q: "Will I need someone to drive me?", a: "Some treatments may require assistance. Ask your team." },
+    { q: "Can I eat before visits?", a: "Some visits require fasting. Your team will tell you." },
+    { q: "What should I bring to visits?", a: "Bring your medication list, questions, and any symptom updates." },
+    { q: "Should I track symptoms at home?", a: "Yes. Writing symptoms down can make it easier to discuss them with your team." },
+    { q: "Can I work during the study?", a: "Some people can, but it depends on how they feel and on the visit schedule." },
+    { q: "Can I exercise during the study?", a: "Ask your doctor what is safe for your specific situation." },
+    { q: "Can I take vitamins or supplements?", a: "Always ask your care team before starting anything new." },
+    { q: "Should I tell the study team about ER visits or hospital stays?", a: "Yes. It is important to report significant medical events." },
+    { q: "Can I still see my other doctors?", a: "Usually yes, but your study team should know about outside care." },
+    { q: "Can family come with me?", a: "Often yes, but ask about current clinic visitor rules." },
+    { q: "Should I keep a list of questions for each visit?", a: "Yes. That can help you feel more prepared and make visits more productive." },
+    { q: "Can I drink water before visits?", a: "Usually yes unless your team gives different instructions." },
+    { q: "What is the best way to prepare for treatment days?", a: "Confirm instructions ahead of time, bring what you need, and ask questions if anything is unclear." }
+  ],
+
+  "After the study": [
+    { q: "What happens after the study ends?", a: "You may enter follow-up or return to standard care." },
+    { q: "Will I continue to be monitored after treatment?", a: "Some studies include follow-up visits or calls." },
+    { q: "Will I receive results from the study?", a: "Sometimes results are shared, but not always immediately." },
+    { q: "Can I switch to another study later?", a: "Possibly, depending on your condition and available options." },
+    { q: "Will this affect future treatments?", a: "Your doctor will consider this in your care plan." },
+    { q: "What if I change my mind before the study ends?", a: "You can withdraw at any time." },
+    { q: "Will my records stay private after the study?", a: "Yes. Privacy protections continue after study participation ends." },
+    { q: "Can my doctor still use what was learned during the study?", a: "Your doctor may use the information gathered during participation to guide care decisions." },
+    { q: "Will I still be able to ask questions after treatment stops?", a: "You should still know how to contact your team for follow-up needs." },
+    { q: "What is long-term follow-up?", a: "Some studies continue collecting information after treatment ends to better understand long-term outcomes." },
+    { q: "Can side effects happen after treatment stops?", a: "Sometimes yes, which is why follow-up can matter." },
+    { q: "Will I always stay on study treatment until the end?", a: "Not always. Treatment may stop before follow-up ends." },
+    { q: "Can I return to regular care after a study?", a: "Yes. Your doctor will explain the next step in your care plan." },
+    { q: "Will the study team tell me when I am officially off study?", a: "Yes, they should explain when treatment or participation ends." },
+    { q: "Can I ask for a summary of my study participation?", a: "You can ask your team what information they can provide." }
+  ]
+};
+
+const patientQuestions = Object.values(QUESTION_BANK).flat();
 
 const demoEnhancedStudy = {
   ok: true,
@@ -76,7 +170,7 @@ const demoEnhancedStudy = {
   condition: 'Relapsed Acute Leukemia',
   phase: 'PHASE 2',
   status: 'ACTIVE',
-  sponsor: 'My Trial Journey Biotech',
+  sponsor: 'NUR Health',
   summary:
     'This study is evaluating Aurora-01 in patients with relapsed leukemia. The goal is to better understand how this treatment works, how safe it is, and how patients respond over time.',
   participation:
@@ -96,6 +190,30 @@ const demoEnhancedStudy = {
   todayMessage:
     'Review your upcoming visits, note any symptoms, and bring your questions to the study team.',
   questions: [...patientQuestions],
+  helpfulTips: [
+    'Bring your medication list to each visit.',
+    'Write down new symptoms as soon as you notice them.',
+    'Confirm your next appointment before leaving the clinic.',
+    'Bring water, snacks, and anything you may need if the visit is long.',
+    'Ask the team who to contact after hours before you need it.',
+    'Tell the team about new medications, supplements, or urgent care visits.',
+    'Use one notebook or app note for questions between visits.',
+    'Arrive a little early on treatment days in case labs or check-in take longer.'
+  ],
+  adverseEvents: [
+    { key: 'fatigue', label: 'Fatigue', note: 'Feeling more tired than usual.' },
+    { key: 'nausea', label: 'Nausea', note: 'Upset stomach or feeling like you may vomit.' },
+    { key: 'vomiting', label: 'Vomiting', note: 'Throwing up after treatment or between visits.' },
+    { key: 'diarrhea', label: 'Diarrhea', note: 'Loose or frequent stools.' },
+    { key: 'constipation', label: 'Constipation', note: 'Difficulty having a bowel movement.' },
+    { key: 'fever', label: 'Fever', note: 'Feeling hot, chills, or a measured fever.' },
+    { key: 'headache', label: 'Headache', note: 'New or worsening head pain.' },
+    { key: 'rash', label: 'Rash', note: 'New skin irritation, redness, or itching.' },
+    { key: 'pain', label: 'Pain', note: 'New or worsening pain anywhere in the body.' },
+    { key: 'shortness_of_breath', label: 'Shortness of breath', note: 'Trouble breathing or feeling winded.' },
+    { key: 'dizziness', label: 'Dizziness', note: 'Feeling lightheaded or unsteady.' },
+    { key: 'loss_of_appetite', label: 'Loss of appetite', note: 'Eating less than usual because food is less appealing.' }
+  ],
   visits: [
     {
       code: 'SCR',
@@ -105,7 +223,7 @@ const demoEnhancedStudy = {
       timeEstimate: '3–5 hrs',
       marker: 'SCR',
       expect:
-        'This visit may include blood work, a physical exam, and baseline tests to confirm that the study is a good fit.',
+        'This visit may include tests to confirm that the study is a good fit and to establish your baseline before treatment starts.',
       tip:
         'Bring your medication list and be ready to review your medical history.',
       procedures: [
@@ -126,8 +244,9 @@ const demoEnhancedStudy = {
       tip:
         'Plan extra time and ask your team if there are any special instructions before treatment.',
       procedures: [
-        { icon: '💉', title: 'Study drug infusion', note: 'Aurora-01 may be given during this visit.' },
-        { icon: '🧪', title: 'Pre-treatment labs', note: 'Labs may be checked before treatment begins.' },
+        { icon: '🧪', title: 'Blood tests', note: 'Labs may be checked before treatment begins.' },
+        { icon: '🩺', title: 'Physical exam / review', note: 'The team may review symptoms, medications, and how you are feeling.' },
+        { icon: '💉', title: 'Study treatment', note: 'Aurora-01 may be given during this visit.' },
         { icon: '👀', title: 'Observation', note: 'You may be monitored after treatment for safety.' }
       ]
     },
@@ -144,6 +263,7 @@ const demoEnhancedStudy = {
         'Write down any side effects or questions since your last visit.',
       procedures: [
         { icon: '🧪', title: 'Blood tests', note: 'Lab work may help monitor how you are doing on study.' },
+        { icon: '🩺', title: 'Physical exam / review', note: 'The team may review side effects, medications, and changes since the last visit.' },
         { icon: '💬', title: 'Symptom review', note: 'The team may ask about any side effects or changes.' }
       ]
     },
@@ -159,8 +279,9 @@ const demoEnhancedStudy = {
       tip:
         'Tell the team about any new medications, ER visits, or symptoms.',
       procedures: [
-        { icon: '🧪', title: 'Labs', note: 'Routine study labs may be repeated.' },
-        { icon: '🩺', title: 'Clinical review', note: 'The team checks your overall status and study progress.' }
+        { icon: '🧪', title: 'Blood tests', note: 'Routine study labs may be repeated.' },
+        { icon: '🩺', title: 'Physical exam / review', note: 'The team checks your overall status and study progress.' },
+        { icon: '📝', title: 'Study review', note: 'The visit may include medication and symptom review.' }
       ]
     },
     {
@@ -175,16 +296,12 @@ const demoEnhancedStudy = {
       tip:
         'Confirm the schedule with your team and bring any new questions.',
       procedures: [
-        { icon: '💉', title: 'Study treatment', note: 'Treatment may continue according to the study schedule.' },
         { icon: '🧪', title: 'Blood tests', note: 'Labs may be checked before and/or after treatment.' },
+        { icon: '🩺', title: 'Physical exam / review', note: 'The team reviews how you are doing before continuing treatment.' },
+        { icon: '💉', title: 'Study treatment', note: 'Treatment may continue according to the study schedule.' },
         { icon: '📝', title: 'Study review', note: 'Medications and side effects may be reviewed.' }
       ]
     }
-  ],
-  journeySteps: [
-    { title: 'Screening', subtitle: 'Before treatment starts', state: 'complete' },
-    { title: 'Treatment', subtitle: 'Visit-by-visit journey', state: 'current' },
-    { title: 'Follow-up', subtitle: 'After treatment ends', state: 'upcoming' }
   ]
 };
 
@@ -195,52 +312,11 @@ const state = {
   selectedVisitCode: null
 };
 
-function setPrimaryButtonText() {
-  const continueBtn = document.getElementById('continueBtn');
-  if (continueBtn) continueBtn.textContent = 'START MY JOURNEY';
-}
-
-function hideInternalModeIndicators() {
-  if (modePill) modePill.style.display = 'none';
-  const experienceBadge = document.getElementById('experienceBadge');
-  if (experienceBadge) experienceBadge.style.display = 'none';
-}
-
-function improveJourneyLayout() {
-  const screenJourney = document.getElementById('screen-journey');
-  const visitCard = document.getElementById('visitDetailsCard');
-  const ribbonWrap = document.getElementById('visitRibbon')?.closest('.stack');
-  const sectionHeader = screenJourney?.querySelector('.section-header');
-  const journeySubnav = screenJourney?.querySelector('.journey-subnav');
-
-  if (journeySubnav) {
-    const calendarShortcut = journeySubnav.querySelector('[data-target="calendar"]');
-    if (calendarShortcut) calendarShortcut.style.display = 'none';
-  }
-
-  if (screenJourney && sectionHeader && ribbonWrap && visitCard) {
-    sectionHeader.insertAdjacentElement('afterend', ribbonWrap);
-    ribbonWrap.insertAdjacentElement('afterend', visitCard);
-  }
-}
-
-function relabelJourneyCards() {
-  const summaryLabel = document.getElementById('trialSummary')?.closest('.card')?.querySelector('.mini-label');
-  const participationLabel = document.getElementById('trialWhyItMatters')?.closest('.card')?.querySelector('.mini-label');
-  const treatmentLabel = document.getElementById('trialTreatment')?.closest('.card')?.querySelector('.mini-label');
-  const disclaimerLabel = document.getElementById('trialDisclaimer')?.closest('.card')?.querySelector('.mini-label');
-
-  if (summaryLabel) summaryLabel.textContent = 'About this study';
-  if (participationLabel) participationLabel.textContent = 'What participation may involve';
-  if (treatmentLabel) treatmentLabel.textContent = 'Treatment being studied';
-  if (disclaimerLabel) disclaimerLabel.textContent = 'Questions to ask your team';
-}
-
 function showScreen(name) {
   Object.values(screens).forEach(screen => screen.classList.remove('active'));
   if (screens[name]) screens[name].classList.add('active');
 
-  const showNav = ['home', 'journey', 'more'].includes(name);
+  const showNav = ['home', 'journey', 'calendar'].includes(name);
   if (bottomNav) bottomNav.classList.toggle('visible', showNav);
 
   updateNav(name);
@@ -326,30 +402,16 @@ function getBasicStudyModel(apiData) {
     todayMessage:
       'Review the study overview, write down your questions, and confirm details with your research team.',
     questions: [...patientQuestions],
-    visits: [
-      {
-        code: 'OVERVIEW',
-        shortLabel: 'Overview',
-        title: 'General Study View',
-        subtitle: 'High-level study information',
-        timeEstimate: 'Varies',
-        marker: 'GEN',
-        expect:
-          'Your exact visit schedule depends on the study and on your care team’s instructions.',
-        tip:
-          'Ask your team about visit timing, required labs, and who to contact with symptoms.',
-        procedures: [
-          { icon: '📘', title: 'Study overview', note: 'Public study details such as title, sponsor, condition, and phase.' },
-          { icon: '🧪', title: 'Possible monitoring', note: 'Participation may involve labs, clinic visits, scans, or treatment visits.' },
-          { icon: '💬', title: 'Questions for your team', note: 'Use this app to prepare questions for your care team.' }
-        ]
-      }
+    helpfulTips: [
+      'Write questions down between visits so you do not forget them.',
+      'Bring your medication list to study visits.',
+      'Tell the team about new symptoms, ER visits, or medications.',
+      'Confirm your next appointment before leaving the clinic.',
+      'Ask your team who to contact after hours.',
+      'Follow any fasting or visit instructions exactly as given.'
     ],
-    journeySteps: [
-      { title: 'Screening', subtitle: 'Before treatment starts', state: 'complete' },
-      { title: 'Treatment', subtitle: 'Study participation', state: 'current' },
-      { title: 'Follow-up', subtitle: 'After treatment', state: 'upcoming' }
-    ]
+    adverseEvents: [],
+    visits: []
   };
 }
 
@@ -366,109 +428,66 @@ function renderHome() {
   const welcomeTitle = document.getElementById('welcomeTitle');
   const welcomeSubtitle = document.getElementById('welcomeSubtitle');
   const studyTitleHome = document.getElementById('studyTitleHome');
-  const studyMetaHome = document.getElementById('studyMetaHome');
-  const studyNctChip = document.getElementById('studyNctChip');
-  const todayMessage = document.getElementById('todayMessage');
-  const homeMetaLine = document.getElementById('homeMetaLine');
-  const progressSnapshot = document.getElementById('progressSnapshot');
 
   if (welcomeTitle) welcomeTitle.textContent = `Hello, ${state.user.firstName}`;
   if (welcomeSubtitle) welcomeSubtitle.textContent = `You are viewing ${state.study.NCTId}.`;
   if (studyTitleHome) studyTitleHome.textContent = state.study.title;
-  if (studyMetaHome) {
-    studyMetaHome.textContent =
-      `${toSentenceCase(state.study.phase)} • ${state.study.condition} • ${state.study.sponsor}`;
-  }
-  if (studyNctChip) studyNctChip.textContent = state.study.NCTId;
-  if (todayMessage) todayMessage.textContent = state.study.todayMessage || '';
-
-  if (homeMetaLine) {
-    homeMetaLine.innerHTML = '';
-    [toSentenceCase(state.study.phase), state.study.condition, toSentenceCase(state.study.status)].forEach(value => {
-      const pill = document.createElement('span');
-      pill.className = 'meta-pill';
-      pill.textContent = value || 'N/A';
-      homeMetaLine.appendChild(pill);
-    });
-  }
-
-  if (progressSnapshot) {
-    progressSnapshot.innerHTML = '';
-    (state.study.journeySteps || []).forEach(step => {
-      const item = document.createElement('div');
-      item.className = 'progress-item';
-      const active = step.state === 'complete' || step.state === 'current';
-      item.innerHTML = `
-        <div class="dot ${active ? 'active' : ''}"></div>
-        <div>
-          <strong style="font-size:14px;">${step.title}</strong>
-          <div class="helper" style="margin-top:4px;">${step.subtitle}</div>
-        </div>
-      `;
-      progressSnapshot.appendChild(item);
-    });
-  }
-}
-
-function formatQuestionList(list) {
-  if (!Array.isArray(list) || !list.length) return '—';
-  return list.map(item => `• ${item}`).join('<br>');
 }
 
 function renderJourney() {
   if (!state.study) return;
 
-  relabelJourneyCards();
+  renderStudyOverview();
+  renderVisitRibbonAndDetails();
+  renderAdverseEvents();
+  renderHelpfulTips();
+}
 
+function renderStudyOverview() {
   const trialAppTitle = document.getElementById('trialAppTitle');
   const trialSummary = document.getElementById('trialSummary');
   const trialWhyItMatters = document.getElementById('trialWhyItMatters');
   const trialTreatment = document.getElementById('trialTreatment');
   const trialHowGiven = document.getElementById('trialHowGiven');
-  const trialDisclaimer = document.getElementById('trialDisclaimer');
-  const journeyOverviewPill = document.getElementById('journeyOverviewPill');
 
-  if (trialAppTitle) trialAppTitle.textContent = state.study.title;
+  if (trialAppTitle) trialAppTitle.textContent = state.study.title || '—';
   if (trialSummary) trialSummary.textContent = state.study.summary || '—';
   if (trialWhyItMatters) trialWhyItMatters.textContent = state.study.participation || '—';
   if (trialTreatment) trialTreatment.textContent = state.study.treatment || '—';
   if (trialHowGiven) trialHowGiven.textContent = state.study.howGiven || '—';
-  if (trialDisclaimer) {
-    trialDisclaimer.innerHTML = formatQuestionList(state.study.questionsToAskTeam || []);
-  }
-  if (journeyOverviewPill) {
-    journeyOverviewPill.textContent = `${toSentenceCase(state.study.phase)} • ${state.study.sponsor}`;
-  }
-
-  renderVisitRibbonAndDetails();
 }
 
 function renderVisitRibbonAndDetails() {
   const ribbon = document.getElementById('visitRibbon');
   const visitDetailsCard = document.getElementById('visitDetailsCard');
   const basicJourneyNote = document.getElementById('basicJourneyNote');
+  const journeyRibbonWrap = document.getElementById('journeyRibbonWrap');
+  const journeyActions = document.getElementById('journeyActions');
+  const exploreQuestionsBtn = document.getElementById('exploreQuestionsBtn');
 
-  if (!ribbon || !visitDetailsCard) return;
+  if (!ribbon || !visitDetailsCard || !basicJourneyNote || !journeyRibbonWrap) return;
 
   const visits = state.study.visits || [];
-  if (!state.selectedVisitCode && visits.length) {
-    state.selectedVisitCode = visits[0].code;
-  }
 
   if (!state.enhanced) {
     ribbon.innerHTML = '';
-    visitDetailsCard.style.display = 'none';
-
-    if (basicJourneyNote) {
-      basicJourneyNote.style.display = 'block';
-      basicJourneyNote.textContent =
-        'Your exact visit schedule will be explained by your research team. In many studies, participation may include screening tests, clinic visits, blood tests, treatment visits, and safety monitoring.';
-    }
+    journeyRibbonWrap.classList.add('hidden');
+    visitDetailsCard.classList.add('hidden');
+    basicJourneyNote.style.display = 'block';
+    journeyActions.classList.add('hidden');
+    exploreQuestionsBtn.classList.remove('hidden');
     return;
   }
 
-  visitDetailsCard.style.display = 'grid';
-  if (basicJourneyNote) basicJourneyNote.style.display = 'none';
+  journeyRibbonWrap.classList.remove('hidden');
+  visitDetailsCard.classList.remove('hidden');
+  basicJourneyNote.style.display = 'none';
+  journeyActions.classList.remove('hidden');
+  exploreQuestionsBtn.classList.add('hidden');
+
+  if (!state.selectedVisitCode && visits.length) {
+    state.selectedVisitCode = visits[0].code;
+  }
 
   ribbon.innerHTML = '';
 
@@ -480,6 +499,7 @@ function renderVisitRibbonAndDetails() {
       state.selectedVisitCode = visit.code;
       saveState();
       renderVisitRibbonAndDetails();
+      renderAdverseEvents();
     });
     ribbon.appendChild(btn);
   });
@@ -522,31 +542,145 @@ function renderVisitRibbonAndDetails() {
 function renderQuestions() {
   if (!state.study) return;
 
-  const questionsList = document.getElementById('questionsList');
-  if (!questionsList) return;
+  const searchInput = document.getElementById('questionsSearch');
+  const results = document.getElementById('questionsSearchResults');
+  const container = document.getElementById('questionCategories');
 
-  questionsList.innerHTML = '';
-  (state.study.questions || []).forEach(item => {
-    const details = document.createElement('details');
-    details.innerHTML = `<summary>${item.q}</summary><p>${item.a}</p>`;
-    questionsList.appendChild(details);
+  if (!searchInput || !results || !container) return;
+
+  container.innerHTML = '';
+  results.innerHTML = '';
+
+  Object.entries(QUESTION_BANK).forEach(([title, questions]) => {
+    const block = document.createElement('div');
+    block.className = 'category-card';
+
+    block.innerHTML = `
+      <button class="category-header" type="button">
+        <span>${title}</span>
+        <span>+</span>
+      </button>
+      <div class="category-body">
+        ${questions.map(item => `
+          <details>
+            <summary>${item.q}</summary>
+            <p>${item.a}</p>
+          </details>
+        `).join('')}
+      </div>
+    `;
+
+    const header = block.querySelector('.category-header');
+    header.addEventListener('click', () => {
+      block.classList.toggle('open');
+      header.querySelector('span:last-child').textContent = block.classList.contains('open') ? '–' : '+';
+    });
+
+    container.appendChild(block);
   });
+
+  searchInput.oninput = () => {
+    const value = searchInput.value.trim().toLowerCase();
+
+    if (!value) {
+      results.classList.remove('active');
+      results.innerHTML = '';
+      container.style.display = 'grid';
+      return;
+    }
+
+    const matches = patientQuestions.filter(item =>
+      item.q.toLowerCase().includes(value) || item.a.toLowerCase().includes(value)
+    );
+
+    container.style.display = 'none';
+    results.classList.add('active');
+    results.innerHTML = '';
+
+    if (!matches.length) {
+      const empty = document.createElement('div');
+      empty.className = 'empty-note';
+      empty.textContent = 'No matching questions found.';
+      results.appendChild(empty);
+      return;
+    }
+
+    matches.forEach(item => {
+      const details = document.createElement('details');
+      details.innerHTML = `<summary>${item.q}</summary><p>${item.a}</p>`;
+      results.appendChild(details);
+    });
+  };
 }
 
 function renderMore() {
   if (!state.study) return;
 
-  const moreExperienceText = document.getElementById('moreExperienceText');
   const moreDisclaimer = document.getElementById('moreDisclaimer');
-
-  if (moreExperienceText) {
-    moreExperienceText.textContent =
-      'This app is designed to help you understand your study and stay informed during your participation.';
-  }
-
   if (moreDisclaimer) {
     moreDisclaimer.textContent = state.study.disclaimer || '';
   }
+}
+
+function getAdverseEventsStorageKey() {
+  if (!state.user?.nct) return 'mtj_ae_default';
+  const visit = state.selectedVisitCode || 'general';
+  return `mtj_ae_${state.user.nct}_${visit}`;
+}
+
+function renderAdverseEvents() {
+  const container = document.getElementById('adverseEventsList');
+  if (!container) return;
+
+  const effects = state.study.adverseEvents || [];
+  const storageKey = getAdverseEventsStorageKey();
+  const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
+
+  container.innerHTML = '';
+
+  if (!effects.length) {
+    const note = document.createElement('div');
+    note.className = 'empty-note';
+    note.textContent = 'No adverse event tracker is available for this study view.';
+    container.appendChild(note);
+    return;
+  }
+
+  effects.forEach(effect => {
+    const checked = !!saved[effect.key];
+    const row = document.createElement('div');
+    row.className = 'tracker-item';
+    row.innerHTML = `
+      <input type="checkbox" id="ae_${effect.key}" ${checked ? 'checked' : ''} />
+      <div>
+        <label for="ae_${effect.key}">${effect.label}</label>
+        <small>${effect.note}</small>
+      </div>
+    `;
+
+    const checkbox = row.querySelector('input');
+    checkbox.addEventListener('change', () => {
+      saved[effect.key] = checkbox.checked;
+      localStorage.setItem(storageKey, JSON.stringify(saved));
+    });
+
+    container.appendChild(row);
+  });
+}
+
+function renderHelpfulTips() {
+  const container = document.getElementById('helpfulTipsList');
+  if (!container) return;
+
+  const tips = state.study.helpfulTips || [];
+  container.innerHTML = '';
+
+  tips.forEach(tip => {
+    const div = document.createElement('div');
+    div.className = 'tip-item';
+    div.textContent = tip;
+    container.appendChild(div);
+  });
 }
 
 async function loadStudy() {
@@ -581,7 +715,7 @@ async function loadStudy() {
 
     state.enhanced = false;
     state.study = getBasicStudyModel(data);
-    state.selectedVisitCode = state.study.visits?.[0]?.code || null;
+    state.selectedVisitCode = null;
 
     renderAll();
     saveState();
@@ -609,6 +743,16 @@ function unlockDemoStudy() {
   alert('Invalid code');
 }
 
+function openModal(id) {
+  const modal = document.getElementById(id);
+  if (modal) modal.classList.add('active');
+}
+
+function closeModal(id) {
+  const modal = document.getElementById(id);
+  if (modal) modal.classList.remove('active');
+}
+
 document.querySelectorAll('.nav-btn').forEach(btn => {
   btn.addEventListener('click', () => showMainScreen(btn.dataset.screen));
 });
@@ -617,31 +761,6 @@ document.querySelectorAll('.nav-shortcut').forEach(btn => {
   btn.addEventListener('click', () => {
     const target = btn.dataset.target;
     if (target) showMainScreen(target);
-  });
-});
-
-document.querySelectorAll('.demo-basic').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const nctNumber = document.getElementById('nctNumber');
-    const firstName = document.getElementById('firstName');
-    if (firstName) firstName.value = 'Fernando';
-    if (nctNumber) nctNumber.value = btn.dataset.nct || 'NCT06387342';
-  });
-});
-
-document.querySelectorAll('.demo-enhanced').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const nctNumber = document.getElementById('nctNumber');
-    const firstName = document.getElementById('firstName');
-    if (firstName) firstName.value = 'Fernando';
-    if (nctNumber) nctNumber.value = DEMO_NCT;
-  });
-});
-
-document.querySelectorAll('.demo-code').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const siteCode = document.getElementById('siteCode');
-    if (siteCode) siteCode.value = DEMO_CODE;
   });
 });
 
@@ -660,7 +779,7 @@ const websiteLink = document.getElementById('websiteLink');
 if (websiteLink) {
   websiteLink.addEventListener('click', (e) => {
     e.preventDefault();
-    alert('Website link placeholder.');
+    window.open('https://nurjourney.com', '_blank', 'noopener,noreferrer');
   });
 }
 
@@ -671,11 +790,43 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
   });
 });
 
+const studyOverviewBtn = document.getElementById('studyOverviewBtn');
+if (studyOverviewBtn) {
+  studyOverviewBtn.addEventListener('click', () => openModal('studyOverviewModal'));
+}
+
+const closeStudyOverviewModal = document.getElementById('closeStudyOverviewModal');
+if (closeStudyOverviewModal) {
+  closeStudyOverviewModal.addEventListener('click', () => closeModal('studyOverviewModal'));
+}
+
+const adverseEventsBtn = document.getElementById('adverseEventsBtn');
+if (adverseEventsBtn) {
+  adverseEventsBtn.addEventListener('click', () => openModal('adverseEventsModal'));
+}
+
+const closeAdverseEventsModal = document.getElementById('closeAdverseEventsModal');
+if (closeAdverseEventsModal) {
+  closeAdverseEventsModal.addEventListener('click', () => closeModal('adverseEventsModal'));
+}
+
+const helpfulTipsBtn = document.getElementById('helpfulTipsBtn');
+if (helpfulTipsBtn) {
+  helpfulTipsBtn.addEventListener('click', () => openModal('helpfulTipsModal'));
+}
+
+const closeHelpfulTipsModal = document.getElementById('closeHelpfulTipsModal');
+if (closeHelpfulTipsModal) {
+  closeHelpfulTipsModal.addEventListener('click', () => closeModal('helpfulTipsModal'));
+}
+
+document.querySelectorAll('.modal').forEach(modal => {
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) modal.classList.remove('active');
+  });
+});
+
 window.addEventListener('load', () => {
-  setPrimaryButtonText();
-  hideInternalModeIndicators();
-  improveJourneyLayout();
-  relabelJourneyCards();
   loadSavedState();
 
   setTimeout(() => {
