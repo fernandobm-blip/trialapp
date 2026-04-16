@@ -908,6 +908,26 @@
 
           <button class="overview-trigger" id="studyOverviewBtn">Study overview</button>
 
+          <div id="basicJourneyOverview" class="stack hidden">
+            <div class="card soft stack">
+              <div class="mini-label">About this study</div>
+              <h3 id="basicTrialTitle">—</h3>
+              <p class="lead" id="basicTrialSummary">—</p>
+            </div>
+
+            <div class="grid-2">
+              <div class="card soft stack" style="padding:14px 16px; border-radius:18px;">
+                <div class="mini-label">What participation may involve</div>
+                <p class="lead" id="basicTrialParticipation">—</p>
+              </div>
+
+              <div class="card soft stack" style="padding:14px 16px; border-radius:18px;">
+                <div class="mini-label">Treatment being studied</div>
+                <p class="lead" id="basicTrialTreatment">—</p>
+              </div>
+            </div>
+          </div>
+
           <div class="ribbon-wrap" id="journeyRibbonWrap">
             <div class="ribbon" id="visitRibbon"></div>
           </div>
@@ -950,11 +970,6 @@
               <strong>Adverse events</strong>
               <span>Track symptoms or side effects you want to remember and discuss with your team.</span>
             </button>
-
-            <button class="action-card" id="helpfulTipsBtn" type="button">
-              <strong>Helpful tips</strong>
-              <span>Practical reminders to help you feel prepared for visits and treatment days.</span>
-            </button>
           </div>
 
           <button class="btn btn-secondary nav-shortcut" data-target="questions" id="exploreQuestionsBtn">
@@ -989,6 +1004,25 @@
               <p class="lead" id="trialTreatment">—</p>
               <p class="helper"><strong>How it is given:</strong> <span id="trialHowGiven">—</span></p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-adverse-events" class="screen">
+        <div class="stack-lg">
+          <div class="section-header">
+            <div>
+              <h2>Adverse events</h2>
+            </div>
+            <button class="btn btn-text nav-shortcut" data-target="journey">← Back</button>
+          </div>
+
+          <p class="lead">Use this checklist to keep a simple personal record of symptoms or side effects you want to remember and discuss with your care team.</p>
+
+          <div class="tracker-list" id="adverseEventsList"></div>
+
+          <div class="card soft">
+            <p class="helper">This tracker is for personal reference only and does not replace medical advice. Always contact your care team for symptoms or concerns.</p>
           </div>
         </div>
       </section>
@@ -1069,34 +1103,6 @@
         <button class="nav-btn" data-screen="journey"><span>🧭</span><span>Journey</span></button>
         <button class="nav-btn" data-screen="calendar"><span>📅</span><span>Calendar</span></button>
       </nav>
-    </div>
-  </div>
-
-  <div class="modal" id="adverseEventsModal" aria-hidden="true">
-    <div class="modal-card stack">
-      <div class="section-header">
-        <h3>Adverse events</h3>
-        <button class="modal-close" id="closeAdverseEventsModal">Close</button>
-      </div>
-
-      <p class="lead">Use this checklist to keep a simple personal record of symptoms or side effects you want to remember and discuss with your care team.</p>
-
-      <div class="tracker-list" id="adverseEventsList"></div>
-
-      <div class="card soft">
-        <p class="helper">This tracker is for personal reference only and does not replace medical advice. Always contact your care team for symptoms or concerns.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal" id="helpfulTipsModal" aria-hidden="true">
-    <div class="modal-card stack">
-      <div class="section-header">
-        <h3>Helpful tips</h3>
-        <button class="modal-close" id="closeHelpfulTipsModal">Close</button>
-      </div>
-
-      <div class="tips-list" id="helpfulTipsList"></div>
     </div>
   </div>
 
