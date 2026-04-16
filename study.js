@@ -811,7 +811,12 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
 
 const studyOverviewBtn = document.getElementById('studyOverviewBtn');
 if (studyOverviewBtn) {
-  studyOverviewBtn.addEventListener('click', () => showMainScreen('overview'));
+  studyOverviewBtn.addEventListener('click', () => {
+    if (state.enhanced) {
+      showMainScreen('overview');
+    }
+    // si NO es enhanced → no hace nada
+  });
 }
 
 const adverseEventsBtn = document.getElementById('adverseEventsBtn');
