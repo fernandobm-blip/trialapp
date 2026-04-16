@@ -245,6 +245,10 @@
       background: white;
       transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
     }
+    .input-italic::placeholder {
+  font-style: italic;
+  color: #94a3b8;
+    }
 
     input:focus {
       border-color: #8db3e7;
@@ -812,12 +816,12 @@
           <div class="card stack">
             <div class="field">
               <label for="firstName">First name</label>
-              <input id="firstName" type="text" placeholder="Fernando" />
+              <input id="firstName" type="text" placeholder="Enter your name" class="input-italic" />
             </div>
 
             <div class="field">
               <label for="nctNumber">NCT number</label>
-              <input id="nctNumber" type="text" placeholder="NCT06123456" />
+              <input id="nctNumber" type="text" placeholder="Enter NCT (e.g. NCT01234567)" class="input-italic" />
             </div>
 
             <button class="btn btn-primary" id="continueBtn">START MY JOURNEY</button>
