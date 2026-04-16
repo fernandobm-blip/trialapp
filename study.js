@@ -6,6 +6,7 @@ const screens = {
   trial: document.getElementById('screen-trial'),
   journey: document.getElementById('screen-journey'),
   overview: document.getElementById('screen-overview'),
+  adverseEvents: document.getElementById('screen-adverse-events'),
   calendar: document.getElementById('screen-calendar'),
   questions: document.getElementById('screen-questions'),
   more: document.getElementById('screen-more')
@@ -314,7 +315,9 @@ const state = {
 };
 
 function showScreen(name) {
-  Object.values(screens).forEach(screen => screen.classList.remove('active'));
+  Object.values(screens).forEach(screen => {
+    if (screen) screen.classList.remove('active');
+  });
   if (screens[name]) screens[name].classList.add('active');
 
   const showNav = ['home', 'journey', 'calendar'].includes(name);
@@ -335,6 +338,7 @@ function showMainScreen(name) {
   if (name === 'home') renderHome();
   if (name === 'journey') renderJourney();
   if (name === 'overview') renderStudyOverview();
+  if (name === 'adverseEvents') renderAdverseEvents();
   if (name === 'questions') renderQuestions();
   if (name === 'more') renderMore();
 }
@@ -407,6 +411,7 @@ function renderAll() {
   renderHome();
   renderJourney();
   renderStudyOverview();
+  renderAdverseEvents();
   renderQuestions();
   renderMore();
 }
@@ -426,9 +431,8 @@ function renderHome() {
 function renderJourney() {
   if (!state.study) return;
 
+  renderBasicJourneyOverview();
   renderVisitRibbonAndDetails();
-  renderAdverseEvents();
-  renderHelpfulTips();
 }
 
 function renderStudyOverview() {
@@ -447,6 +451,28 @@ function renderStudyOverview() {
   if (trialHowGiven) trialHowGiven.textContent = state.study.howGiven || '—';
 }
 
+function renderBasicJourneyOverview() {
+  const basicWrap = document.getElementById('basicJourneyOverview');
+  const basicTitle = document.getElementById('basicTrialTitle');
+  const basicSummary = document.getElementById('basicTrialSummary');
+  const basicParticipation = document.getElementById('basicTrialParticipation');
+  const basicTreatment = document.getElementById('basicTrialTreatment');
+
+  if (!basicWrap) return;
+
+  if (state.enhanced) {
+    basicWrap.classList.add('hidden');
+    return;
+  }
+
+  basicWrap.classList.remove('hidden');
+
+  if (basicTitle) basicTitle.textContent = state.study.title || '—';
+  if (basicSummary) basicSummary.textContent = state.study.summary || '—';
+  if (basicParticipation) basicParticipation.textContent = state.study.participation || '—';
+  if (basicTreatment) basicTreatment.textContent = state.study.treatment || '—';
+}
+
 function renderVisitRibbonAndDetails() {
   const ribbon = document.getElementById('visitRibbon');
   const visitDetailsCard = document.getElementById('visitDetailsCard');
@@ -454,6 +480,7 @@ function renderVisitRibbonAndDetails() {
   const journeyRibbonWrap = document.getElementById('journeyRibbonWrap');
   const journeyActions = document.getElementById('journeyActions');
   const exploreQuestionsBtn = document.getElementById('exploreQuestionsBtn');
+  const basicJourneyOverview = document.getElementById('basicJourneyOverview');
 
   if (!ribbon || !visitDetailsCard || !basicJourneyNote || !journeyRibbonWrap) return;
 
@@ -464,16 +491,18 @@ function renderVisitRibbonAndDetails() {
     journeyRibbonWrap.classList.add('hidden');
     visitDetailsCard.classList.add('hidden');
     basicJourneyNote.style.display = 'block';
-    journeyActions.classList.add('hidden');
-    exploreQuestionsBtn.classList.remove('hidden');
+    if (journeyActions) journeyActions.classList.add('hidden');
+    if (exploreQuestionsBtn) exploreQuestionsBtn.classList.remove('hidden');
+    if (basicJourneyOverview) basicJourneyOverview.classList.remove('hidden');
     return;
   }
 
   journeyRibbonWrap.classList.remove('hidden');
   visitDetailsCard.classList.remove('hidden');
   basicJourneyNote.style.display = 'none';
-  journeyActions.classList.remove('hidden');
-  exploreQuestionsBtn.classList.add('hidden');
+  if (journeyActions) journeyActions.classList.remove('hidden');
+  if (exploreQuestionsBtn) exploreQuestionsBtn.classList.add('hidden');
+  if (basicJourneyOverview) basicJourneyOverview.classList.add('hidden');
 
   if (!state.selectedVisitCode && visits.length) {
     state.selectedVisitCode = visits[0].code;
@@ -622,7 +651,7 @@ function renderAdverseEvents() {
   const container = document.getElementById('adverseEventsList');
   if (!container) return;
 
-  const effects = state.study.adverseEvents || [];
+  const effects = state.study?.adverseEvents || [];
   const storageKey = getAdverseEventsStorageKey();
   const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
 
@@ -787,22 +816,7 @@ if (studyOverviewBtn) {
 
 const adverseEventsBtn = document.getElementById('adverseEventsBtn');
 if (adverseEventsBtn) {
-  adverseEventsBtn.addEventListener('click', () => openModal('adverseEventsModal'));
-}
-
-const closeAdverseEventsModal = document.getElementById('closeAdverseEventsModal');
-if (closeAdverseEventsModal) {
-  closeAdverseEventsModal.addEventListener('click', () => closeModal('adverseEventsModal'));
-}
-
-const helpfulTipsBtn = document.getElementById('helpfulTipsBtn');
-if (helpfulTipsBtn) {
-  helpfulTipsBtn.addEventListener('click', () => openModal('helpfulTipsModal'));
-}
-
-const closeHelpfulTipsModal = document.getElementById('closeHelpfulTipsModal');
-if (closeHelpfulTipsModal) {
-  closeHelpfulTipsModal.addEventListener('click', () => closeModal('helpfulTipsModal'));
+  adverseEventsBtn.addEventListener('click', () => showMainScreen('adverseEvents'));
 }
 
 document.querySelectorAll('.modal').forEach(modal => {
