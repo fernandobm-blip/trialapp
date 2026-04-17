@@ -314,6 +314,66 @@ const state = {
   selectedVisitCode: null
 };
 
+// ============================
+// CALENDAR GLOBAL BRIDGE
+// ============================
+
+function loadCalendarEvents() {
+  try {
+    return JSON.parse(localStorage.getItem('mtj_calendar_events') || '[]');
+  } catch (err) {
+    console.error('Could not load calendar events:', err);
+    return [];
+  }
+}
+
+let mtjCalendarEvents = loadCalendarEvents();
+
+function saveCalendarEvents() {
+  localStorage.setItem('mtj_calendar_events', JSON.stringify(mtjCalendarEvents));
+}
+
+window.registerCalendarEvent = function(event) {
+  if (!event || !event.id) return;
+
+  const existingIndex = mtjCalendarEvents.findIndex(e => e.id === event.id);
+
+  if (existingIndex >= 0) {
+    mtjCalendarEvents[existingIndex] = event;
+  } else {
+    mtjCalendarEvents.push(event);
+  }
+
+  saveCalendarEvents();
+
+  window.dispatchEvent(new CustomEvent('mtj:calendar-event-saved', {
+    detail: event
+  }));
+
+  console.log('📅 Calendar event saved:', event);
+};
+
+window.deleteCalendarEvent = function(eventId) {
+  if (!eventId) return;
+
+  mtjCalendarEvents = mtjCalendarEvents.filter(e => e.id !== eventId);
+  saveCalendarEvents();
+
+  window.dispatchEvent(new CustomEvent('mtj:calendar-event-deleted', {
+    detail: { id: eventId }
+  }));
+
+  console.log('🗑️ Calendar event deleted:', eventId);
+};
+
+window.getMTJCalendarEvents = function() {
+  return [...mtjCalendarEvents];
+};
+
+window.getMTJAppState = function() {
+  return { ...state };
+};
+
 function showScreen(name) {
   Object.values(screens).forEach(screen => {
     if (screen) screen.classList.remove('active');
@@ -815,7 +875,6 @@ if (studyOverviewBtn) {
     if (state.enhanced) {
       showMainScreen('overview');
     }
-    // si NO es enhanced → no hace nada
   });
 }
 
