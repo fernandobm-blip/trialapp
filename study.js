@@ -17,6 +17,13 @@ const bottomNav = document.getElementById('bottomNav');
 const DEMO_NCT = 'NCTDEMO0001';
 const DEMO_CODE = 'DEMO001';
 
+// ============================
+// SUPABASE CONFIG
+// REPLACE THESE 2 VALUES
+// ============================
+const SUPABASE_URL = 'https://sppdotfmxasfveigxudu.supabase.co/';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNwcGRvdGZteGFzZnZlaWd4dWR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY1NTMxODUsImV4cCI6MjA5MjEyOTE4NX0.GYpXyTox02pgJvRrEN16WIg8E2XMuECdWMdkEf-s_4U';
+
 const QUESTION_BANK = {
   "Understanding clinical trials": [
     { q: "What is a clinical trial?", a: "A clinical trial is a research study that tests new treatments or new ways of using existing treatments." },
@@ -196,7 +203,7 @@ const demoEnhancedStudy = {
     'Bring your medication list to each visit.',
     'Write down new symptoms as soon as you notice them.',
     'Confirm your next appointment before leaving the clinic.',
-    'Bring water, snacks, and anything you may need if the visit is long.',
+    'Bring water, snacks, and anything your may need if the visit is long.',
     'Ask the team who to contact after hours before you need it.',
     'Tell the team about new medications, supplements, or urgent care visits.',
     'Use one notebook or app note for questions between visits.',
@@ -313,6 +320,146 @@ const state = {
   enhanced: false,
   selectedVisitCode: null
 };
+
+// ============================
+// SUPABASE HELPERS
+// ============================
+
+function hasSupabaseConfig() {
+  return (
+    SUPABASE_URL &&
+    SUPABASE_ANON_KEY &&
+    !SUPABASE_URL.includes('YOUR_PROJECT_ID') &&
+    !SUPABASE_ANON_KEY.includes('YOUR_SUPABASE_ANON_KEY')
+  );
+}
+
+async function supabaseSelect(table, params) {
+  if (!hasSupabaseConfig()) {
+    throw new Error('Supabase is not configured yet.');
+  }
+
+  const search = new URLSearchParams(params);
+  const url = `${SUPABASE_URL}/rest/v1/${table}?${search.toString()}`;
+
+  const res = await fetch(url, {
+    headers: {
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      Accept: 'application/json'
+    }
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Supabase error ${res.status}: ${text}`);
+  }
+
+  return res.json();
+}
+
+async function checkIfEnhanced(nct) {
+  if (!hasSupabaseConfig()) {
+    return { isEnhanced: false };
+  }
+
+  try {
+    const rows = await supabaseSelect('studies', {
+      nct: `eq.${nct}`,
+      select: 'nct,enhanced,active'
+    });
+
+    if (!rows.length) return { isEnhanced: false };
+
+    const row = rows[0];
+    return {
+      isEnhanced: row.enhanced === true && row.active === true
+    };
+  } catch (err) {
+    console.error('checkIfEnhanced error:', err);
+    return { isEnhanced: false };
+  }
+}
+
+async function validateAccessCode(nct, code) {
+  if (!hasSupabaseConfig()) {
+    return false;
+  }
+
+  try {
+    const rows = await supabaseSelect('access_codes', {
+      nct: `eq.${nct}`,
+      code: `eq.${code}`,
+      active: 'eq.true',
+      select: 'id'
+    });
+
+    return rows.length > 0;
+  } catch (err) {
+    console.error('validateAccessCode error:', err);
+    return false;
+  }
+}
+
+async function fetchEnhancedStudyContent(nct) {
+  if (!hasSupabaseConfig()) {
+    return null;
+  }
+
+  try {
+    const rows = await supabaseSelect('study_content', {
+      nct: `eq.${nct}`,
+      select: '*'
+    });
+
+    if (!rows.length) return null;
+
+    return rows[0];
+  } catch (err) {
+    console.error('fetchEnhancedStudyContent error:', err);
+    return null;
+  }
+}
+
+function normalizeArray(value, fallback = []) {
+  return Array.isArray(value) ? value : fallback;
+}
+
+function buildEnhancedStudyModel(baseStudy, contentRow) {
+  if (!contentRow) {
+    return {
+      ...demoEnhancedStudy,
+      NCTId: baseStudy?.NCTId || demoEnhancedStudy.NCTId,
+      title: baseStudy?.title || demoEnhancedStudy.title,
+      condition: baseStudy?.condition || demoEnhancedStudy.condition,
+      phase: baseStudy?.phase || demoEnhancedStudy.phase,
+      status: baseStudy?.status || demoEnhancedStudy.status,
+      sponsor: baseStudy?.sponsor || demoEnhancedStudy.sponsor,
+      summary: baseStudy?.summary || demoEnhancedStudy.summary
+    };
+  }
+
+  return {
+    ok: true,
+    NCTId: baseStudy?.NCTId || contentRow.nct || demoEnhancedStudy.NCTId,
+    title: contentRow.title || baseStudy?.title || demoEnhancedStudy.title,
+    condition: contentRow.condition || baseStudy?.condition || demoEnhancedStudy.condition,
+    phase: contentRow.phase || baseStudy?.phase || demoEnhancedStudy.phase,
+    status: contentRow.status || baseStudy?.status || demoEnhancedStudy.status,
+    sponsor: contentRow.sponsor || baseStudy?.sponsor || demoEnhancedStudy.sponsor,
+    summary: contentRow.summary || baseStudy?.summary || demoEnhancedStudy.summary,
+    participation: contentRow.participation || baseStudy?.participation || demoEnhancedStudy.participation,
+    treatment: contentRow.treatment || baseStudy?.treatment || demoEnhancedStudy.treatment,
+    howGiven: contentRow.how_given || baseStudy?.howGiven || demoEnhancedStudy.howGiven,
+    questionsToAskTeam: normalizeArray(contentRow.questions_to_ask_team, demoEnhancedStudy.questionsToAskTeam),
+    disclaimer: contentRow.disclaimer || baseStudy?.disclaimer || demoEnhancedStudy.disclaimer,
+    todayMessage: contentRow.today_message || demoEnhancedStudy.todayMessage,
+    questions: normalizeArray(contentRow.questions, patientQuestions),
+    helpfulTips: normalizeArray(contentRow.helpful_tips, demoEnhancedStudy.helpfulTips),
+    adverseEvents: normalizeArray(contentRow.adverse_events, demoEnhancedStudy.adverseEvents),
+    visits: normalizeArray(contentRow.visits, demoEnhancedStudy.visits)
+  };
+}
 
 // ============================
 // CALENDAR GLOBAL BRIDGE
@@ -796,8 +943,16 @@ async function loadStudy() {
     state.study = getBasicStudyModel(data);
     state.selectedVisitCode = null;
 
+    const enhancedCheck = await checkIfEnhanced(nct);
+
     renderAll();
     saveState();
+
+    if (enhancedCheck.isEnhanced) {
+      showScreen('code');
+      return;
+    }
+
     showMainScreen('home');
   } catch (e) {
     console.error('Frontend fetch error:', e);
@@ -805,8 +960,13 @@ async function loadStudy() {
   }
 }
 
-function unlockDemoStudy() {
+async function unlockDemoStudy() {
   const code = document.getElementById('siteCode')?.value?.trim().toUpperCase();
+
+  if (!code) {
+    alert('Please enter your access code.');
+    return;
+  }
 
   if (state.user.nct === DEMO_NCT && code === DEMO_CODE) {
     state.enhanced = true;
@@ -819,7 +979,22 @@ function unlockDemoStudy() {
     return;
   }
 
-  alert('Invalid code');
+  const isValid = await validateAccessCode(state.user.nct, code);
+
+  if (!isValid) {
+    alert('Invalid code');
+    return;
+  }
+
+  state.enhanced = true;
+
+  const contentRow = await fetchEnhancedStudyContent(state.user.nct);
+  state.study = buildEnhancedStudyModel(state.study, contentRow);
+  state.selectedVisitCode = state.study.visits?.[0]?.code || null;
+
+  renderAll();
+  saveState();
+  showMainScreen('home');
 }
 
 function openModal(id) {
