@@ -924,11 +924,45 @@ async function loadStudy() {
   state.user.firstName = name;
   state.user.nct = nct;
 
+  // 🔥 DEMO
   if (isDemoNCT) {
     showScreen('code');
     return;
   }
 
+  // 🔥 PRIMERO SUPABASE
+  const enhancedCheck = await checkIfEnhanced(nct);
+
+  if (enhancedCheck.isEnhanced) {
+    state.enhanced = false;
+
+    state.study = {
+      NCTId: nct,
+      title: 'Premium study content',
+      condition: '—',
+      phase: '—',
+      status: '—',
+      sponsor: '—',
+      summary: 'This study has enhanced content available.',
+      participation: 'Please enter your site access code to unlock the personalized journey.',
+      treatment: '—',
+      howGiven: '—',
+      disclaimer: 'This app is for educational purposes only and does not replace medical advice.',
+      questions: [...patientQuestions],
+      helpfulTips: [],
+      adverseEvents: [],
+      visits: []
+    };
+
+    state.selectedVisitCode = null;
+
+    renderAll();
+    saveState();
+    showScreen('code');
+    return;
+  }
+
+  // 🔵 SI NO ES PREMIUM → ClinicalTrials.gov
   try {
     const res = await fetch(`/api/trial?nct=${encodeURIComponent(nct)}`);
     const data = await res.json();
@@ -943,16 +977,8 @@ async function loadStudy() {
     state.study = getBasicStudyModel(data);
     state.selectedVisitCode = null;
 
-    const enhancedCheck = await checkIfEnhanced(nct);
-
     renderAll();
     saveState();
-
-    if (enhancedCheck.isEnhanced) {
-      showScreen('code');
-      return;
-    }
-
     showMainScreen('home');
   } catch (e) {
     console.error('Frontend fetch error:', e);
